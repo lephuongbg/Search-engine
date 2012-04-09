@@ -13,5 +13,4 @@ HEADERS += \
     document.h
 
 OTHER_FILES += \
-    README.txt
-
+    README
