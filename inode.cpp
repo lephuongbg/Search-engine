@@ -5,7 +5,7 @@
  *******************************/
 INode::INode(string w)
 {
-    this->data_.word(w);
+    this->data_ = INodeData(w);
     this->left_ = NULL;
     this->right_ = NULL;
     this->height_ = 1;
