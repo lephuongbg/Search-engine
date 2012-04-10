@@ -7,4 +7,4 @@ public:
     Indexer();
 };
 
-#endif // MANAGER_H
+#endif // INDEXER_H

@@ -5,6 +5,7 @@
 #include <vector>
 #include "document.h"
 
+
 class INodeData
 {
 private:
