@@ -5,7 +5,7 @@
  *******************************/
 INodeData::INodeData()
 {
-    sorted = false;
+    this->sorted_ = false;
 }
 
 INodeData::INodeData(string w)
@@ -48,7 +48,24 @@ void INodeData::docs(Document doc)
     this->docs_.insert(this->docs_.end(), doc);
 }
 
-vector<Document> INodeData::conjunct(INodeData *node_data)
+/*******************************************
+ *      SORT THE LIST OF DOCUMENTS         *
+ *******************************************/
+void INodeData::sortDocs()
 {
 
+}
+
+/**************************************************************
+ *      MERGE TWO LIST OF DOCUMENTS, KEEP ONLY COMMON ONES    *
+ **************************************************************/
+vector<Document> INodeData::_conjunct(INodeData *node1, INodeData *node2)
+{
+}
+
+/**************************************************************
+ *      MERGE TWO LIST OF DOCUMENTS, KEEP ALL DIFFERNCES      *
+ **************************************************************/
+vector<Document> INodeData::_disjunct(INodeData *node1, INodeData *node2)
+{
 }

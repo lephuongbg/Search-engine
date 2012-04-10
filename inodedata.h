@@ -18,8 +18,8 @@ public:
     vector<Document> docs();
     void docs(Document doc);
     void sortDocs();
-    vector<Document> conjunct(INodeData * node_data);
-    vector<Document> disjunct(INodeData * node_data);
+    static vector<Document> _conjunct(INodeData *node1, INodeData *node2);
+    static vector<Document> _disjunct(INodeData *node1, INodeData *node2);
 };
 
 #endif // INODEDATA_H
