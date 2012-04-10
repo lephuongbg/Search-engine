@@ -159,6 +159,49 @@ void Indexer::setQuery(const string &query)
 // EXECUTE THE QUERY
 void Indexer::excute()
 {
+    stack<string> s_operator;
+    stack<vector<Document>> s_operand;
+    Document result;
+    string buffer;
+    
+    while (!this->query_.empty())
+    {
+        buffer = this->query_.pop();
+        if (buffer == "AND")
+        {
+            S_operator.push(buffer);
+        }
+        else if (buffer == "OR")
+        {
+            if (this->query_.top() == "AND")
+            {
+                s_operator.pop();
+                result = Document::conjunct(s_operand.pop(), s_operand.pop();
+                s_operand.push( result );
+            }
+            s_operator.push(buffer);
+        }
+        else
+        {
+            s_operand.push(indexer[buffer].docs());
+        }
+    }
+    
+    while (!s_operator.empty())
+    {
+        if (s_operator.pop() == "AND")
+        {
+            result = Document::conjunct(s_operand.pop(), s_operand.pop();
+            s_operand.push( result );
+        }
+        else
+        {
+            result = Document::disjunct(s_operand.pop(), s_operand.pop();
+            s_operand.push( result );
+        }
+    }
+    
+    this->result_ = result;
 }
 
 // INDEX A DOCUMENT
