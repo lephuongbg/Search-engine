@@ -1,41 +1,56 @@
 #include "inode.h"
 
-INode::INode()
-{
-    initialized = false;
-}
-
+/*******************************
+ *     CLASS CONSTRUCTOR       *
+ *******************************/
 INode::INode(string w)
 {
-    this->data_.word = w;
-    initialized = true;
+    this->data_.word(w);
+    this->left_ = NULL;
+    this->right_ = NULL;
+    this->height_ = 1;
 }
 
-INode *INode::getLeft()
+/************************************************************
+ *  GET POINTER OF LEFT CHILD AND RIGHT CHILD OF THE INODE  *
+ ************************************************************/
+const INode *INode::left()
 {
     return this->left_;
 }
 
-INode *INode::getRight()
+const INode *INode::right()
 {
     return this->right_;
 }
 
-int INode::getHeight()
+/*************************************
+ *    GET THE HEIGHT OF THE NODE     *
+ *************************************/
+int INode::height()
 {
     return this->height_;
 }
 
-INode_data INode::getData()
+/*************************************
+ *    GET THE DATA OF THE NODE       *
+ *************************************/
+INodeData INode::data()
 {
     return this->data_;
 }
 
+/*************************************
+ *  RECALCULATE HEIGHT OF THE NODE   *
+ *************************************/
 void INode::fixStats()
 {
-    this->height_ = max(this->left_->getHeight(), this->right_->getHeight()) + 1;
+    this->height_ = max(this->left_->height(), this->right_->height()) + 1;
 }
 
+/**************************************************************
+ *   POINT THE LEFT AND RIGHT CHILD POINTER TO OTHER INODE    *
+ **************************************************************/
 void INode::setLeft(INode *node)
 {
     this->left_ = node;
@@ -48,20 +63,32 @@ void INode::setRight(INode *node)
     fixStats();
 }
 
-string INode::getWord()
+INodeData::INodeData()
 {
-    return this->data_.word;
+    //Do nothing
 }
 
-void INode::setWord(string w)
+string INodeData::word()
 {
-    if (initialized)
-        return;
-    else
-        this->data_.word = w;
+    return this->word_;
 }
 
-vector<Document> INode::getDocs()
+void INodeData::word(string name)
 {
-    return this->data_.docs;
+    this->word_ = name;
+}
+
+vector<Document> INodeData::docs()
+{
+    return this->docs_;
+}
+
+void INodeData::docs(Document doc)
+{
+    unsigned int i;
+    for (i = 0; i < this->docs_.size(); i++)
+    {
+        if (this->docs_.at(i).name() == doc.name())
+            this->docs_.at(i).increaseOccurrence(doc.occurrence());
+    }
 }

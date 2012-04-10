@@ -3,14 +3,14 @@ CONFIG += console
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    manager.cpp \
-    indexer.cpp \
-    document.cpp
+    document.cpp \
+    inode.cpp \
+    indexer.cpp
 
 HEADERS += \
-    manager.h \
-    indexer.h \
-    document.h
+    document.h \
+    inode.h \
+    indexer.h
 
 OTHER_FILES += \
     README

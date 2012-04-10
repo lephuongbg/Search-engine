@@ -1,5 +1,5 @@
-#ifndef MANAGER_H
-#define MANAGER_H
+#ifndef INDEXER_H
+#define INDEXER_H
 
 class Indexer
 {
