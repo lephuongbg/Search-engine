@@ -1,6 +1,7 @@
 #include "indexer.h"
 #include <cstdlib>
 #include <iostream>
+#include <sstream>
 
 // CONSTRUCTOR
 Indexer::Indexer()
@@ -121,6 +122,38 @@ INode *Indexer::find(const string &keyword)
 // SET A QUERY INTO THE INDEXER
 void Indexer::setQuery(const string &query)
 {
+    stringstream strm;
+    strm.str(query);
+    string buffer("");
+    bool flag = false;
+    
+    while (!query_.empty())
+        query_.pop();
+    
+    while (!strm.eof())
+    {
+        strm >> buffer;
+        
+        if ((buffer == "AND" || buffer == "OR") && flag)
+        {
+            this->query_.push(buffer);
+            flag = false;
+        }
+        else if ((buffer != "AND" && buffer != "OR") && !flag)
+        {
+            this->query_.push(buffer);
+            flag = true;
+        }
+        else
+        {
+            while (!query_.empty())
+                query_.pop();
+            break;
+        }            
+    }
+    
+    if (!flag)
+        query_.pop();
 }
 
 // EXECUTE THE QUERY
@@ -129,7 +162,7 @@ void Indexer::excute()
 }
 
 // INDEX A DOCUMENT
-void Indexer::addDocument(const string &docname)
+void Indexer::addDocument(const string &)
 {
 }
 
@@ -165,42 +198,4 @@ void Indexer::traverse(INode *node)
 INode *Indexer::indexer()
 {
     return indexer_;
-}
-
-void Indexer::setQuery(string queryStr)
-{
-    string buffer;
-    bool flag = false;
-
-    while (!query_.empty())
-        query_.pop();
-    break;
-
-    while ((pos == queryStr.find_first_not_of(' ')) !=  string::npos)
-    {
-        queryStr = queryStr.substr(pos);
-        pos = queryStr.find_first_of(' ');
-        buffer = substr(0, pos);
-        queryStr = queryStr.substr( pos );
-
-        if ((buffer == "AND" || buffer == "OR") && flag)
-        {
-            this->query_.push_back( buffer );
-            flag = false;
-        }
-        else if ((buffer != "AND" && buffer != "OR") && !flag)
-        {
-            this->query_.push_back( buffer );
-            flag = true;
-        }
-        else
-        {
-            while (!query_.empty())
-                query_.pop();
-            break;
-        }
-    }
-
-    if (!flag)
-        query_.pop();
 }
