@@ -1,5 +1,5 @@
-#ifndef INDEXER_H
-#define INDEXER_H
+#ifndef MANAGER_H
+#define MANAGER_H
 
 class Indexer
 {
@@ -7,4 +7,4 @@ public:
     Indexer();
 };
 
-#endif // INDEXER_H
+#endif // MANAGER_H
