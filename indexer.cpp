@@ -1,5 +1,6 @@
 #include "indexer.h"
 #include <cstdlib>
+#include <sstream>
 
 Indexer::Indexer()
 {
@@ -114,6 +115,39 @@ INode *Indexer::find(const string &keyword)
 
 void Indexer::setQuery(const string &query)
 {
+    stringstream strm;
+    strm.str(query);
+    string buffer("");
+    bool flag = false;
+    
+    while (!query_.empty())
+        query_.pop();
+    break;    
+    
+    while (!strm.eof())
+    {
+        strm >> buffer;
+        
+        if ((buffer == "AND" || buffer == "OR") && flag)
+        {
+            this->query_.push_back( buffer );
+            flag = false;
+        }
+        else if (buffer != "AND" && buffer != "OR") && !flag)
+        {
+            this->query_.push_back( buffer );
+            flag = true;
+        }
+        else
+        {
+            while (!query_.empty())
+                query_.pop();
+            break;
+        }            
+    }
+    
+    if (!flag)
+        query_.pop();
 }
 
 void Indexer::excute()
