@@ -57,17 +57,3 @@ void INodeData::sortDocs()
     if (!sorted_)
         sort(this->docs_.begin(), this->docs().end(), Document::docNameComp);
 }
-
-/**************************************************************
- *      MERGE TWO LIST OF DOCUMENTS, KEEP ONLY COMMON ONES    *
- **************************************************************/
-vector<Document> INodeData::conjunct(INodeData *node1, INodeData *node2)
-{
-}
-
-/**************************************************************
- *      MERGE TWO LIST OF DOCUMENTS, KEEP ALL DIFFERNCES      *
- **************************************************************/
-vector<Document> INodeData::disjunct(INodeData *node1, INodeData *node2)
-{
-}

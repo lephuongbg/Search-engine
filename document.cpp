@@ -59,3 +59,17 @@ bool Document::docNameComp(Document doc1, Document doc2)
 {
     return (doc1.name().compare(doc2.name()) <= 0);
 }
+
+/**************************************************************
+ *      MERGE TWO LIST OF DOCUMENTS, KEEP ONLY COMMON ONES    *
+ **************************************************************/
+vector<Document> Document::conjunct(vector<Document> docs1, vector<Document> docs2)
+{
+}
+
+/**************************************************************
+ *      MERGE TWO LIST OF DOCUMENTS, KEEP ALL DIFFERNCES      *
+ **************************************************************/
+vector<Document> Document::disjunct(vector<Document> docs1, vector<Document> docs2)
+{
+}
