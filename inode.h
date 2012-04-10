@@ -20,6 +20,7 @@ public:
     INode * left();
     INode *right();
     int height();
+    static int getHeight(INode * node);
     INodeData data();
     void fixStats();
     void setLeft(INode * node);

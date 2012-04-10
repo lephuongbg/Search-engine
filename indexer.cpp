@@ -1,17 +1,21 @@
 #include "indexer.h"
 #include <cstdlib>
+#include <iostream>
 
+// CONSTRUCTOR
 Indexer::Indexer()
 {
     indexer_ = NULL;
 }
 
+// DESTRUCTOR
 Indexer::~Indexer()
 {
     if (indexer_)
         delete indexer_;
 }
 
+// INSERT A KEYWORD INTO THE INDEXER
 void Indexer::insertKey(const string & keyword)
 {
     indexer_ = insertKey(indexer_, keyword);
@@ -36,18 +40,19 @@ INode * Indexer::insertKey(INode * node, const string &keyword)
     }
 }
 
+// REBALANCE THE INDEXER'S STRUCTURE
 INode * Indexer::reBalance(INode *node)
 {
     if (node == NULL)
         return node;
 
-    int leftHeight = node->left()->height();
-    int rightHeight = node->right()->height();
+    int leftHeight = INode::getHeight(node->left());
+    int rightHeight = INode::getHeight(node->right());
     if (abs(leftHeight - rightHeight) < 2)
         return node;
 
     // Check if we need to rotate the node right or left
-    bool rotateRight = leftHeight < rightHeight;
+    bool rotateRight = leftHeight > rightHeight;
     // We rotate the node right when left height is larger than right height
     if (rotateRight)
     {
@@ -55,7 +60,7 @@ INode * Indexer::reBalance(INode *node)
         INode * lChild = left->left();
         INode * rChild = left->right();
         //Left-left case
-        if (lChild->height() > rChild->height())
+        if (INode::getHeight(lChild) > INode::getHeight(rChild))
         {
             node->setLeft(rChild);
             left->setRight(node);
@@ -78,10 +83,10 @@ INode * Indexer::reBalance(INode *node)
         INode * lChild = right->left();
         INode * rChild = right->right();
         //Right-right case
-        if (rChild->height() > lChild->height())
+        if (INode::getHeight(rChild) > INode::getHeight(lChild))
         {
-            node->setRight(rChild->left());
-            rChild->setLeft(node);
+            node->setRight(right->left());
+            right->setLeft(node);
             node = right;
         }
         //Right-left case
@@ -98,6 +103,7 @@ INode * Indexer::reBalance(INode *node)
     return node;
 }
 
+// FIND A NODE IN THE INDEXER CONTAIN PROVIDED KEYWORD
 INode *Indexer::find(const string &keyword)
 {
     INode * ptr = indexer_;
@@ -112,18 +118,22 @@ INode *Indexer::find(const string &keyword)
     return ptr;
 }
 
+// SET A QUERY INTO THE INDEXER
 void Indexer::setQuery(const string &query)
 {
 }
 
+// EXECUTE THE QUERY
 void Indexer::excute()
 {
 }
 
+// INDEX A DOCUMENT
 void Indexer::addDocument(const string &docname)
 {
 }
 
+// OVERLOADING OPERATOR [] FOR FAST ACCESS NODE VALUE BY KEY WORD
 vector<Document> Indexer::operator[](const string &keyword)
 {
     vector<Document> result;
@@ -138,4 +148,21 @@ vector<Document> Indexer::operator[](const string &keyword)
     }
 
     return result;
+}
+
+// PRINT ALL KEYWORDS IN INDEXER
+void Indexer::traverse(INode *node)
+{
+    if (node != NULL)
+    {
+        traverse(node->left());
+        std::cout << node->data().word() << '\n';
+        traverse(node->right());
+    }
+}
+
+// PROVIDE ACCESS TO INDEXER DATA
+INode *Indexer::indexer()
+{
+    return indexer_;
 }

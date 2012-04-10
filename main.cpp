@@ -1,17 +1,22 @@
 #include <iostream>
 #include <string>
-#include "document.h"
+#include "indexer.h"
 
 using namespace std;
 
 int main()
 {
-    Document A("file1");
-    Document B("file2");
-    if (Document::docNameComp(A, B))
-        cout << A.name() << B.name();
-    else
-        cout << B.name() << A.name();
+    Indexer I;
+    I.insertKey("I");
+    I.insertKey("love");
+    I.insertKey("you");
+    I.insertKey("very");
+    I.insertKey("much");
+    I.insertKey("more");
+    I.insertKey("than");
+    I.insertKey("I");
+    I.insertKey("say");
+    Indexer::traverse(I.indexer());
     return 0;
 }
 

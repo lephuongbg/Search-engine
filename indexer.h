@@ -23,6 +23,8 @@ public:
     void excute();
     void addDocument(const string &docname);
     vector<Document> operator[](const string &keyword);
+    static void traverse(INode * node);
+    INode * indexer();
 };
 
 #endif // INDEXER_H

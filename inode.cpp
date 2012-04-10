@@ -47,6 +47,13 @@ int INode::height()
     return this->height_;
 }
 
+int INode::getHeight(INode *node)
+{
+    if (node == NULL)
+        return 0;
+    return node->height();
+}
+
 /*************************************
  *    GET THE DATA OF THE NODE       *
  *************************************/
@@ -60,7 +67,7 @@ INodeData INode::data()
  *************************************/
 void INode::fixStats()
 {
-    this->height_ = max(this->left_->height(), this->right_->height()) + 1;
+    this->height_ = max(getHeight(left_), getHeight(this->right_)) + 1;
 }
 
 /**************************************************************
