@@ -9,9 +9,9 @@ Document::Document()
     this->occurrence_ = 1;
 }
 
-Document::Document(string name)
+Document::Document(string docname)
 {
-    this->name_ = name;
+    this->name_ = docname;
     this->occurrence_ = 1;
 }
 
@@ -28,7 +28,7 @@ string Document::name()
  ************************************/
 void Document::name(string name)
 {
-    this->name_ = name;
+    this->name_ = nameadasdas
 }
 
 /***************************************************
@@ -48,7 +48,7 @@ void Document::occurrence(int occurrence)
 }
 
 void Document::increaseOccurrence(int n)
-{
+{docCmpdocasdasd
     this->occurrence_ += n;
 }
 
@@ -60,16 +60,82 @@ bool Document::docNameComp(Document doc1, Document doc2)
     return (doc1.name().compare(doc2.name()) <= 0);
 }
 
-/**************************************************************
- *      MERGE TWO LIST OF DOCUMENTS, KEEP ONLY COMMON ONES    *
- **************************************************************/
+/*****************************************************************************
+ *      MERGE TWO LIST OF DOCUMENTS, KEEP ONLY COMMON ONES                   *
+ *****************************************************************************/
 vector<Document> Document::conjunct(vector<Document> docs1, vector<Document> docs2)
 {
+    unsigned int i = 0, j = 0, o1, o2;
+    string name1, name2;
+    Document temp;
+    vector<Document> result;
+    
+    while (i < docs1.size() && j < docs2.size()) 
+    {
+        name1 = docs1.at(i).name();
+        name2 = docs2.at(j).name();
+        if (name1 == name2)
+        {
+            temp.name( name1 );
+            o1 = docs1.at(i).occurrence();
+            o2 = docs2.at(j).occurrence();
+            temp.occurrence( (o1 < o2):o1;o2 );
+            result.push_back( temp );
+            i++;
+            j++;
+        }
+        else if (name1 < name2)
+        {
+            i++;
+        }
+        else
+        {
+            j++;
+        }
+    }
+    
+    return result;
 }
 
-/**************************************************************
- *      MERGE TWO LIST OF DOCUMENTS, KEEP ALL DIFFERNCES      *
- **************************************************************/
+/*****************************************************************************
+ *      MERGE TWO LIST OF DOCUMENTS, KEEP ALL DIFFERNCES AND COMMON ONES     *
+ *****************************************************************************/
 vector<Document> Document::disjunct(vector<Document> docs1, vector<Document> docs2)
 {
+    unsigned int i = 0, j = 0, o1, o2;
+    string name1, name2;
+    Document temp;
+    vector<Document> result;
+    
+    while (i < docs1.size() && j < docs2.size()) 
+    {
+        name1 = docs1.at(i).name();
+        name2 = docs2.at(j).name();
+        if (name1 == name2)
+        {
+            temp.name( name1 );
+            o1 = docs1.at(i).occurrence();
+            o2 = docs2.at(j).occurrence();
+            temp.occurrence( (o1 > o2):o1;o2 );
+            result.push_back( temp );
+            i++;
+            j++;
+        }
+        else if (name1 < name2)
+        {
+            temp.name( name1 );
+            temp.occurrence( docs1.at(i).occurrence() );
+            result.push_back( temp );
+            i++;
+        }
+        else
+        {
+            temp.name( name2 );
+            temp.occurrence( docs2.at(j).occurrence() );
+            result.push_back( temp );
+            j++;
+        }
+    }
+    
+    return result;
 }
