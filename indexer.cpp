@@ -5,6 +5,12 @@ Indexer::Indexer()
     indexer_ = NULL;
 }
 
+Indexer::~Indexer()
+{
+    if (indexer_)
+        delete indexer_;
+}
+
 void Indexer::insertKey(const string & keyword)
 {
     indexer_ = insertKey(indexer_, keyword);

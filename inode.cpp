@@ -10,6 +10,14 @@ INode::INode()
     this->height_ = 1;
 }
 
+INode::~INode()
+{
+    if (left_)
+        delete left_;
+    if (right_)
+        delete right_;
+}
+
 INode::INode(const string &w)
 {
     this->data_ = INodeData(w);

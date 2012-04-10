@@ -15,6 +15,7 @@ private:
 
 public:
     INode();
+    ~INode();
     INode(const string &w);
     const INode * left();
     const INode * right();

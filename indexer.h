@@ -16,7 +16,7 @@ public:
     void insertKey(const string & keyword);
     static INode * insertKey(INode * node, const string & keyword);
     static INode * reBalance(INode * node);
-    void deleteKey(string keyword);
+    //void deleteKey(string keyword);
     void setQuery(const string &query);
     void excute();
     void addDocument(const string &docname);
