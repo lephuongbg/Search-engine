@@ -9,11 +9,11 @@ class INodeData
 private:
     string word_;
     vector<Document> docs_;
-    bool sorted;
+    bool sorted_;
 
 public:
     INodeData();
-    INodeData(string w);
+    INodeData(string word);
     string word();
     vector<Document> docs();
     void docs(Document doc);
