@@ -1,6 +1,7 @@
 #ifndef INDEXER_H
 #define INDEXER_H
 #include "inode.h"
+#include <stack>
 
 class Indexer
 {
@@ -12,11 +13,13 @@ private:
 public:
     Indexer();
     ~Indexer();
-    void insertINode(INode * node);
-    void deleteINode(INode * node);
-    void setQuery(string);
+    void insertKey(const string & keyword);
+    static INode * insertKey(INode * node, const string & keyword);
+    static INode * reBalance(INode * node);
+    void deleteKey(string keyword);
+    void setQuery(const string &query);
     void excute();
-    void addDocument(string);
+    void addDocument(const string &docname);
 };
 
 #endif // INDEXER_H

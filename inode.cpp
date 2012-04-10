@@ -3,7 +3,14 @@
 /*******************************
  *     CLASS CONSTRUCTOR       *
  *******************************/
-INode::INode(string w)
+INode::INode()
+{
+    this->left_ = NULL;
+    this->right_ = NULL;
+    this->height_ = 1;
+}
+
+INode::INode(const string &w)
 {
     this->data_ = INodeData(w);
     this->left_ = NULL;

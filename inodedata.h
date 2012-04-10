@@ -13,10 +13,10 @@ private:
 
 public:
     INodeData();
-    INodeData(string word);
+    INodeData(const string &word);
     string word();
     vector<Document> docs();
-    void docs(Document doc);
+    void docs(const Document &doc);
     void sortDocs();
 };
 

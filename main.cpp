@@ -8,7 +8,7 @@ int main()
 {
     Document A("file1");
     Document B("file2");
-    if (Document::_docNameComp(A, B))
+    if (Document::docNameComp(A, B))
         cout << A.name() << B.name();
     else
         cout << B.name() << A.name();

@@ -14,7 +14,8 @@ private:
     int height_;
 
 public:
-    INode(string w);
+    INode();
+    INode(const string &w);
     const INode * left();
     const INode * right();
     int height();

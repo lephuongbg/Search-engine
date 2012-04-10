@@ -9,7 +9,7 @@ INodeData::INodeData()
     this->sorted_ = false;
 }
 
-INodeData::INodeData(string w)
+INodeData::INodeData(const string &w)
 {
     this->word_ = w;
 }
@@ -33,7 +33,7 @@ vector<Document> INodeData::docs()
 /*****************************************
  *       ADD DOCUMENT TO THE LIST        *
  *****************************************/
-void INodeData::docs(Document doc)
+void INodeData::docs(const Document &doc)
 {
     unsigned int i;
     //Check for existance of the document in the list
