@@ -2,37 +2,37 @@
 
 Document::Document()
 {
-    name_ = "";
-    occurence_ = 0;
+    this->name_ = "";
+    this->occurence_ = 0;
 }
 
 Document::Document(string name)
 {
-    name_ = name;
-    occurence_ = 1;
+    this->name_ = name;
+    this->occurence_ = 1;
 }
 
 string Document::name()
 {
-    return name_;
+    return this->name_;
 }
 
 void Document::name(string name)
 {
-    name_ = name;
+    this->name_ = name;
 }
 
 int Document::occurrence()
 {
-    return occurrence_;
+    return this->occurrence_;
 }
 
 void Document::occurrence(int occurence)
 {
-    occurrence_ = occurrence;
+    this->occurrence_ = occurrence;
 }
 
 void Document::increaseOccurrence(int n)
 {
-    occurrence_ += n;
+    this->occurrence_ += n;
 }
