@@ -29,12 +29,12 @@ INode::INode(const string &w)
 /************************************************************
  *  GET POINTER OF LEFT CHILD AND RIGHT CHILD OF THE INODE  *
  ************************************************************/
-const INode *INode::left()
+INode *INode::left()
 {
     return this->left_;
 }
 
-const INode *INode::right()
+INode *INode::right()
 {
     return this->right_;
 }
