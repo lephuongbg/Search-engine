@@ -4,23 +4,7 @@
 #include <string>
 #include <vector>
 #include "document.h"
-
-
-class INodeData
-{
-private:
-    string word_;
-    vector<Document> docs_;
-
-public:
-    INodeData();
-    string word();
-    void word(string name);
-    vector<Document> docs();
-    void docs(Document doc);
-    vector<Document> conjunt(INodeData * node_data);
-    vector<Document> compose(INodeData * node_data);
-};
+#include "inodedata.h"
 
 class INode
 {
