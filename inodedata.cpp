@@ -48,7 +48,7 @@ void INodeData::docs(Document doc)
     this->docs_.insert(this->docs_.end(), doc);
 }
 
-vector<Document> INodeData::conjunt(INodeData *node_data)
+vector<Document> INodeData::conjunct(INodeData *node_data)
 {
 
 }

@@ -18,7 +18,7 @@ public:
     vector<Document> docs();
     void docs(Document doc);
     void sortDocs();
-    vector<Document> conjunt(INodeData * node_data);
+    vector<Document> conjunct(INodeData * node_data);
     vector<Document> compose(INodeData * node_data);
 };
 
