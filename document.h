@@ -12,9 +12,9 @@ private:
     int occurrence_;
 public:
     Document();
-    Document(string docname);
+    Document(const string &docname);
     string name();
-    void name(string docname);
+    void name(const string &docname);
     int occurrence();
     void occurrence(int occurrence);
     void increaseOccurrence(int n);

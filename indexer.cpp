@@ -1,4 +1,5 @@
 #include "indexer.h"
+#include <cstdlib>
 
 Indexer::Indexer()
 {
@@ -66,7 +67,7 @@ INode * Indexer::reBalance(INode *node)
             node->setLeft(rChild->right());
             left->setRight(rChild->left());
             rChild->setLeft(left);
-            rChild->SetRight(node);
+            rChild->setRight(node);
             node = rChild;
         }
     }
@@ -95,4 +96,46 @@ INode * Indexer::reBalance(INode *node)
     }
 
     return node;
+}
+
+INode *Indexer::find(const string &keyword)
+{
+    INode * ptr = indexer_;
+    while (ptr != NULL && keyword != ptr->data().word())
+    {
+        if (keyword < ptr->data().word())
+            ptr = ptr->left();
+        else
+            ptr = ptr->right();
+    }
+
+    return ptr;
+}
+
+void Indexer::setQuery(const string &query)
+{
+}
+
+void Indexer::excute()
+{
+}
+
+void Indexer::addDocument(const string &docname)
+{
+}
+
+vector<Document> Indexer::operator[](const string &keyword)
+{
+    vector<Document> result;
+    INode * keynode = this->find(keyword);
+    if (keynode == NULL)
+    {
+        this->insertKey(keyword);
+    }
+    else
+    {
+        result = keynode->data().docs();
+    }
+
+    return result;
 }

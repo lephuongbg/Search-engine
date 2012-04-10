@@ -16,7 +16,7 @@ public:
     INodeData(const string &word);
     string word();
     vector<Document> docs();
-    void docs(const Document &doc);
+    void docs(Document doc);
     void sortDocs();
 };
 

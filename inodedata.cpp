@@ -33,20 +33,22 @@ vector<Document> INodeData::docs()
 /*****************************************
  *       ADD DOCUMENT TO THE LIST        *
  *****************************************/
-void INodeData::docs(const Document &doc)
+void INodeData::docs(Document doc)
 {
     unsigned int i;
     //Check for existance of the document in the list
-    for (i = 0; i < this->docs_.size(); i++)
+    for (i = 0; i < docs_.size(); i++)
     {
-        if (this->docs_.at(i).name() == doc.name())     //If yes,
+        //If yes,
+        if (docs_.at(i).name() == doc.name())
         {
-            this->docs_.at(i).increaseOccurrence(doc.occurrence()); //Increase the word occurrence counter for the document
+            //Increase the word occurrence counter for the document
+            docs_.at(i).increaseOccurrence(doc.occurrence());
             return;
         }
     }
     //If the list doesn't have the document, add it to the list
-    this->docs_.insert(this->docs_.end(), doc);
+    docs_.insert(docs_.end(), doc);
 }
 
 /*******************************************

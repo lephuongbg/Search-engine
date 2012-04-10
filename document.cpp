@@ -9,7 +9,7 @@ Document::Document()
     this->occurrence_ = 1;
 }
 
-Document::Document(const string docname)
+Document::Document(const string &docname)
 {
     this->name_ = docname;
     this->occurrence_ = 1;
@@ -20,13 +20,13 @@ Document::Document(const string docname)
  ************************************/
 string Document::name()
 {
-    return this->name_;
+    return name_;
 }
 
 /************************************
  *       SET THE DOCUMENT NAME      *
  ************************************/
-void Document::name(const string docname)
+void Document::name(const string &docname)
 {
     this->name_ = docname;
 }

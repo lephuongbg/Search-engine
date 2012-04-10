@@ -17,8 +17,8 @@ public:
     INode();
     ~INode();
     INode(const string &w);
-    const INode * left();
-    const INode * right();
+    INode * left();
+    INode *right();
     int height();
     INodeData data();
     void fixStats();
