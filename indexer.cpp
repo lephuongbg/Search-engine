@@ -128,7 +128,7 @@ void Indexer::setQuery(const string &query)
     bool flag = false;
     
     while (!query_.empty())
-        query_.pop();
+        this->query_.pop();
     
     while (!strm.eof())
     {
@@ -147,61 +147,76 @@ void Indexer::setQuery(const string &query)
         else
         {
             while (!query_.empty())
-                query_.pop();
+                this->query_.pop();
             break;
         }            
     }
     
     if (!flag)
-        query_.pop();
+        this->query_.pop();
 }
 
 // EXECUTE THE QUERY
-void Indexer::excute()
+void Indexer::execute()
 {
     stack<string> s_operator;
-    stack<vector<Document>> s_operand;
-    Document result;
-    string buffer;
+    stack< vector<Document> > s_operand;
+    vector<Document> result, o1, o2;
+    string buffer("");
     
     while (!this->query_.empty())
     {
-        buffer = this->query_.pop();
+        buffer = this->query_.top();
+        this->query_.pop();
         if (buffer == "AND")
         {
-            S_operator.push(buffer);
+            s_operator.push(buffer);
         }
         else if (buffer == "OR")
         {
             if (this->query_.top() == "AND")
             {
                 s_operator.pop();
-                result = Document::conjunct(s_operand.pop(), s_operand.pop();
+                o1 = s_operand.top();
+                s_operand.pop();
+                o2 = s_operand.top();
+                s_operand.pop();
+                result = Document::conjunct(o1, o2);
                 s_operand.push( result );
             }
             s_operator.push(buffer);
         }
         else
         {
-            s_operand.push(indexer[buffer].docs());
+            s_operand.push(this->indexer_[buffer]);
         }
     }
     
     while (!s_operator.empty())
     {
-        if (s_operator.pop() == "AND")
+        if (s_operator.top() == "AND")
         {
-            result = Document::conjunct(s_operand.pop(), s_operand.pop();
+            s_operator.pop();
+            o1 = s_operand.top();
+            s_operand.pop();
+            o2 = s_operand.top();
+            s_operand.pop();
+            result = Document::conjunct(o1, o2);
             s_operand.push( result );
         }
         else
         {
-            result = Document::disjunct(s_operand.pop(), s_operand.pop();
+            s_operator.pop();
+            o1 = s_operand.top();
+            s_operand.pop();
+            o2 = s_operand.top();
+            s_operand.pop();
+            result = Document::conjunct(o1, o2);
             s_operand.push( result );
         }
     }
     
-    this->result_ = result;
+    //this->result_ = result;
 }
 
 // INDEX A DOCUMENT
