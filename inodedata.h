@@ -19,7 +19,7 @@ public:
     void docs(Document doc);
     void sortDocs();
     vector<Document> conjunct(INodeData * node_data);
-    vector<Document> compose(INodeData * node_data);
+    vector<Document> disjunct(INodeData * node_data);
 };
 
 #endif // INODEDATA_H
