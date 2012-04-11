@@ -1,20 +1,24 @@
+QT += core gui
 TEMPLATE = app
 CONFIG += console
-CONFIG -= qt
-QMAKE_CXXFLAGS += -std=c++0x
 
 SOURCES += main.cpp \
     document.cpp \
     inode.cpp \
     indexer.cpp \
-    inodedata.cpp
+    inodedata.cpp \
+    mainwindow.cpp
 
 HEADERS += \
     document.h \
     inode.h \
     indexer.h \
-    inodedata.h
+    inodedata.h \
+    mainwindow.h
 
 OTHER_FILES += \
     README \
     stopwords
+
+FORMS += \
+    mainwindow.ui
