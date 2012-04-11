@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QStringList>
+#include <QStringListModel>
 #include "indexer.h"
 
 namespace Ui {
@@ -19,13 +20,19 @@ public:
     
 private slots:
     void on_actionAddFiles_triggered();
-
     void on_actionClose_triggered();
+    void updateFileView();
 
+signals:
+    void fileListChanged();
 private:
     Ui::MainWindow *ui;
     Indexer * indexer;
-    QStringList filelist;
+    QStringList fileList;
+    QStringListModel fileListModel;
+    bool stopWordsAsked;
+    void getStopWords();
+    void index(QStringList &list);
 };
 
 #endif // MAINWINDOW_H
