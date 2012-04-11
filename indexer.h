@@ -21,6 +21,7 @@ public:
     //void deleteKey(string keyword);
     void setQuery(const string &query);
     void excute();
+    vector<Document> getResult();
     void addDocument(const string &docname);
     vector<Document> operator[](const string &keyword);
     static void traverse(INode * node);
