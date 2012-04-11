@@ -1,13 +1,15 @@
 #ifndef INDEXER_H
 #define INDEXER_H
 #include "inode.h"
+#include <set>
 #include <stack>
 #include <vector>
 
 class Indexer
 {
-private:
+protected:
     INode * indexer_;
+    set<string> stopwords_;
     stack<string> query_;
     vector<Document> result_;
 
@@ -23,7 +25,8 @@ public:
     vector<Document> result();
     void addDocument(const string &docname);
     vector<Document> operator[](const string &keyword);
-    static bool isIgnore(const string &keyword);
+    bool isIgnore(const string &keyword);
+    void indexStopWords(const string &wordfile);
     static void traverse(INode * node);
     INode * indexer();
 };

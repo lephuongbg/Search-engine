@@ -103,7 +103,7 @@ vector<Document> Document::conjunct(vector<Document> docs1, vector<Document> doc
 }
 
 /*****************************************************************************
- *      MERGE TWO LIST OF DOCUMENTS, KEEP ALL DIFFERNCES AND COMMON ONES     *
+ *      MERGE TWO LIST OF DOCUMENTS, KEEP ALL DIFFERENCES AND COMMON ONES    *
  *****************************************************************************/
 vector<Document> Document::disjunct(vector<Document> docs1, vector<Document> docs2)
 {

@@ -218,7 +218,7 @@ void Indexer::execute()
             s_operand.pop();
             o2 = s_operand.top();
             s_operand.pop();
-            result_ = Document::conjunct(o1, o2);
+            result_ = Document::disjunct(o1, o2);
             s_operand.push(result_);
         }
     }
@@ -236,16 +236,22 @@ vector<Document> Indexer::result()
 // INDEX A DOCUMENT
 void Indexer::addDocument(const string &docname)
 {
+    // Open document
     ifstream docfile;
     docfile.open(docname.c_str());
+
+    //Association value for keyword
     Document doc;
     doc.name(docname);
+
     string keyword;
     if (docfile.is_open())
     {
         while (docfile.good())
         {
+            // Read each word one by one in the document
             docfile >> keyword;
+            // If keyword is insignificantly important, ignoreit
             if (isIgnore(keyword))
                 continue;
             this->insertKey(keyword);
@@ -275,9 +281,11 @@ bool Indexer::isIgnore(const string &keyword)
 {
     switch (keyword.at(0))
     {
-    case '\0':
+    // Ignore SGML tags
     case '<':
         return true;
+    // Ignore punctuation, comma
+    case ',':
     case '.':
         if (keyword.size() == 1)
             return true;
@@ -286,7 +294,25 @@ bool Indexer::isIgnore(const string &keyword)
         break;
     }
 
+    // If the keyword exists in stopwords list, also ignore it
+    if (stopwords_.find(keyword) != stopwords_.end())
+        return true;
     return false;
+}
+
+void Indexer::indexStopWords(const string &wordfile)
+{
+    ifstream file;
+    file.open(wordfile.c_str());
+    string stopword;
+    if (file.is_open())
+    {
+        while (file.good())
+        {
+            file >> stopword;
+            stopwords_.insert(stopword);
+        }
+    }
 }
 
 // PRINT ALL KEYWORDS IN INDEXER

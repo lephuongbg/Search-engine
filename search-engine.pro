@@ -15,4 +15,5 @@ HEADERS += \
     inodedata.h
 
 OTHER_FILES += \
-    README
+    README \
+    stopwords

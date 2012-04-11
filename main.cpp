@@ -8,10 +8,12 @@ int main(int argc, char *argv[])
 {
     Indexer I;
     cout << "Indexing..." << '\n';
+    I.indexStopWords("stopwords");
     for (int i = 1; i < argc; i++)
     {
         I.addDocument(argv[i]);
     }
+    Indexer::traverse(I.indexer());
     while (1)
     {
         cout << "Query: ";
