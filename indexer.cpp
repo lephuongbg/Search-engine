@@ -216,7 +216,13 @@ void Indexer::execute()
         }
     }
     
-    //this->result_ = result;
+    this->result_ = result;
+}
+
+// GET QUERY RESULT
+vector<Document> getResult()
+{
+    return this->result_;
 }
 
 // INDEX A DOCUMENT
