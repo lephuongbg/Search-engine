@@ -9,7 +9,7 @@ class Indexer
 private:
     INode * indexer_;
     stack<string> query_;
-    vector<string> result_;
+    vector<Document> result_;
 
 public:
     Indexer();
