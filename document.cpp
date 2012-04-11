@@ -128,18 +128,26 @@ vector<Document> Document::disjunct(vector<Document> docs1, vector<Document> doc
         }
         else if (name1 < name2)
         {
-            temp.name( name1 );
-            temp.occurrence( docs1.at(i).occurrence() );
-            result.push_back( temp );
+            result.push_back( docs1.at(i) );
             i++;
         }
         else
         {
-            temp.name( name2 );
-            temp.occurrence( docs2.at(j).occurrence() );
-            result.push_back( temp );
+            result.push_back( docs2.at(j) );
             j++;
         }
+    }
+    
+    while (i < docs1.size())
+    {
+        result.push_back( docs1.at(i) );
+        i++;
+    }
+    
+    while (j < docs2.size())
+    {
+        result.push_back( docs2.at(j) );
+        j++;
     }
     
     return result;
