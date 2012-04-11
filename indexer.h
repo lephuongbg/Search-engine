@@ -26,7 +26,10 @@ public:
     void addDocument(const string &docname);
     vector<Document> operator[](const string &keyword);
     bool isIgnore(const string &keyword);
+    static bool isGarbage(char c);
+    static void filter (string &keyword);
     void indexStopWords(const string &wordfile);
+    // For debugging
     static void traverse(INode * node);
     INode * indexer();
 };

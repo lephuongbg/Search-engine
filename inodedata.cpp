@@ -20,7 +20,7 @@ INodeData::INodeData(const string &w)
  *******************************/
 string INodeData::word()
 {
-    return this->word_;
+    return word_;
 }
 
 /********************************************
@@ -28,7 +28,7 @@ string INodeData::word()
  ********************************************/
 vector<Document> INodeData::docs()
 {
-    return this->docs_;
+    return docs_;
 }
 
 /*****************************************
@@ -58,5 +58,5 @@ void INodeData::docs(Document doc)
 void INodeData::sortDocs()
 {
     if (!sorted_)
-        sort(this->docs_.begin(), this->docs().end(), Document::docNameComp);
+        sort(docs_.begin(), this->docs().end(), Document::docNameComp);
 }

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <unordered_set>
 #include "indexer.h"
 
 using namespace std;
@@ -7,13 +8,33 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     Indexer I;
-    cout << "Indexing..." << '\n';
-    I.indexStopWords("stopwords");
+
+    // Store command line arguments
+    vector<string> args;
     for (int i = 1; i < argc; i++)
+        args.insert(args.end(), string(argv[i]));
+    vector<string>::iterator it;
+
+    // If using stop words list:
+    for (it = args.begin(); it != args.end() && *it != "--stop-words-file"; it++);
+    if (it != args.end())
     {
-        I.addDocument(argv[i]);
+        // Consume option
+        args.erase(it);
+        // Index stop words list
+        I.indexStopWords(*it);
+        // Consume argument
+        args.erase(it);
     }
-    Indexer::traverse(I.indexer());
+
+    // Index all documents from command line args
+    cout << "Indexing...\n";
+    for (it = args.begin(); it != args.end(); it++)
+    {
+        I.addDocument(*it);
+    }
+    cout << "Complete.\n";
+//    Indexer::traverse(I.indexer());
     while (1)
     {
         cout << "Query: ";

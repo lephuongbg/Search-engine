@@ -135,7 +135,7 @@ void Indexer::setQuery(const string &query)
     bool flag = false;
     
     while (!query_.empty())
-        this->query_.pop();
+        query_.pop();
     
     while (!strm.eof())
     {
@@ -143,24 +143,24 @@ void Indexer::setQuery(const string &query)
         
         if ((buffer == "AND" || buffer == "OR") && flag)
         {
-            this->query_.push(buffer);
+            query_.push(buffer);
             flag = false;
         }
         else if ((buffer != "AND" && buffer != "OR") && !flag)
         {
-            this->query_.push(buffer);
+            query_.push(buffer);
             flag = true;
         }
         else
         {
             while (!query_.empty())
-                this->query_.pop();
+                query_.pop();
             break;
         }            
     }
     
     if (!flag)
-        this->query_.pop();
+        query_.pop();
 }
 
 // EXECUTE THE QUERY
@@ -171,17 +171,17 @@ void Indexer::execute()
     vector<Document> o1, o2;
     string buffer;
     
-    while (!this->query_.empty())
+    while (!query_.empty())
     {
-        buffer = this->query_.top();
-        this->query_.pop();
+        buffer = query_.top();
+        query_.pop();
         if (buffer == "AND")
         {
             s_operator.push(buffer);
         }
         else if (buffer == "OR")
         {
-            if (this->query_.top() == "AND")
+            if (query_.top() == "AND")
             {
                 s_operator.pop();
                 o1 = s_operand.top();
@@ -252,6 +252,8 @@ void Indexer::addDocument(const string &docname)
         {
             // Read each word one by one in the document
             docfile >> keyword;
+            // Remove unnecessary character from keyword
+            filter(keyword);
             // If keyword is insignificantly important, ignoreit
             if (isIgnore(keyword))
                 continue;
@@ -266,10 +268,12 @@ vector<Document> Indexer::operator[](const string &keyword)
 {
     vector<Document> result;
     INode * keynode = this->at(keyword);
+    // If the keyword doesn't exist, add it to the indexer
     if (keynode == NULL)
     {
         this->insertKey(keyword);
     }
+    // otherwise, return all documents containing it
     else
     {
         result = keynode->data()->docs();
@@ -280,6 +284,8 @@ vector<Document> Indexer::operator[](const string &keyword)
 
 bool Indexer::isIgnore(const string &keyword)
 {
+    if (keyword.size() == 0)
+        return true;
     switch (keyword.at(0))
     {
     // Ignore SGML tags
@@ -295,12 +301,31 @@ bool Indexer::isIgnore(const string &keyword)
         break;
     }
 
-    // If the keyword exists in stopwords list, also ignore it
+    // If the keyword exists in stop words list, also ignore it
     if (stopwords_.find(keyword) != stopwords_.end())
         return true;
     return false;
 }
 
+// REMOVE UNNECESSARY CHARACTER FROM KEYWORD
+bool Indexer::isGarbage(char c)
+{
+    return c == '(' || c == ')' || c == '/';
+}
+
+void Indexer::filter(string &keyword)
+{
+    // Remove all characters defined in isGarbage method
+    keyword.resize(std::remove_if(keyword.begin(), keyword.end(), isGarbage) - keyword.begin());
+
+    // Remove comma and punctuation at the end of the word
+    if (keyword.rfind(',') == keyword.length() - 1)
+        keyword.erase(keyword.end()-1);
+    if (keyword.rfind('.') == keyword.length() - 1)
+        keyword.erase(keyword.end()-1);
+}
+
+// RETRIEVE STOP WORDS FROM FILE
 void Indexer::indexStopWords(const string &wordfile)
 {
     ifstream file;
@@ -310,6 +335,7 @@ void Indexer::indexStopWords(const string &wordfile)
     {
         while (file.good())
         {
+            // Read words one by one then insert them to the set
             file >> stopword;
             stopwords_.insert(stopword);
         }

@@ -6,17 +6,17 @@
 INode::INode()
 {
     data_ = new INodeData;
-    this->left_ = NULL;
-    this->right_ = NULL;
-    this->height_ = 1;
+    left_ = NULL;
+    right_ = NULL;
+    height_ = 1;
 }
 
 INode::INode(const string &w)
 {
-    this->data_ = new INodeData(w);
-    this->left_ = NULL;
-    this->right_ = NULL;
-    this->height_ = 1;
+    data_ = new INodeData(w);
+    left_ = NULL;
+    right_ = NULL;
+    height_ = 1;
 }
 
 INode::~INode()
@@ -33,12 +33,12 @@ INode::~INode()
  ************************************************************/
 INode *INode::left()
 {
-    return this->left_;
+    return left_;
 }
 
 INode *INode::right()
 {
-    return this->right_;
+    return right_;
 }
 
 /*************************************
@@ -46,7 +46,7 @@ INode *INode::right()
  *************************************/
 int INode::height()
 {
-    return this->height_;
+    return height_;
 }
 
 int INode::getHeight(INode *node)
@@ -69,7 +69,7 @@ INodeData * INode::data()
  *************************************/
 void INode::fixStats()
 {
-    this->height_ = max(getHeight(left_), getHeight(this->right_)) + 1;
+    height_ = max(getHeight(left_), getHeight(this->right_)) + 1;
 }
 
 /**************************************************************
@@ -77,12 +77,12 @@ void INode::fixStats()
  **************************************************************/
 void INode::setLeft(INode *node)
 {
-    this->left_ = node;
+    left_ = node;
     fixStats();
 }
 
 void INode::setRight(INode *node)
 {
-    this->right_ = node;
+    right_ = node;
     fixStats();
 }
