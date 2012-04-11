@@ -248,17 +248,25 @@ void Indexer::addDocument(const string &docname)
     string keyword;
     if (docfile.is_open())
     {
-        while (docfile.good())
+        // Check if the file is text file or not
+        int c;
+        while ( (c = docfile.get()) != EOF && c <= 127 );
+        if (c == EOF)
         {
-            // Read each word one by one in the document
-            docfile >> keyword;
-            // Remove unnecessary character from keyword
-            filter(keyword);
-            // If keyword is insignificantly important, ignoreit
-            if (isIgnore(keyword))
-                continue;
-            this->insertKey(keyword);
-            this->at(keyword)->data()->docs(doc);
+            docfile.clear();
+            docfile.seekg(0, ios::beg);
+            while (docfile.good())
+            {
+                // Read each word one by one in the document
+                docfile >> keyword;
+                // Remove unnecessary character from keyword
+                filter(keyword);
+                // If keyword is insignificantly important, ignoreit
+                if (isIgnore(keyword))
+                    continue;
+                this->insertKey(keyword);
+                this->at(keyword)->data()->docs(doc);
+            }
         }
     }
 }
