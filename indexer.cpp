@@ -131,7 +131,7 @@ void Indexer::setQuery(const string &query)
 {
     stringstream strm;
     strm.str(query);
-    string buffer("");
+    string buffer;
     bool flag = false;
     
     while (!query_.empty())
@@ -169,7 +169,7 @@ void Indexer::execute()
     stack<string> s_operator;
     stack< vector<Document> > s_operand;
     vector<Document> o1, o2;
-    string buffer("");
+    string buffer;
     
     while (!this->query_.empty())
     {
@@ -218,12 +218,13 @@ void Indexer::execute()
             s_operand.pop();
             o2 = s_operand.top();
             s_operand.pop();
-            result_ = Document::conjunct(o1, o2);
+            result_ = Document::disjunct(o1, o2);
             s_operand.push(result_);
         }
     }
-
-    result_ = s_operand.top();
+    
+    if (!s_operand.empty())
+        result_ = s_operand.top();
 }
 
 vector<Document> Indexer::result()
