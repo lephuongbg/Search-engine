@@ -5,6 +5,15 @@
  *******************************/
 INode::INode()
 {
+    data_ = new INodeData;
+    this->left_ = NULL;
+    this->right_ = NULL;
+    this->height_ = 1;
+}
+
+INode::INode(const string &w)
+{
+    this->data_ = new INodeData(w);
     this->left_ = NULL;
     this->right_ = NULL;
     this->height_ = 1;
@@ -16,14 +25,7 @@ INode::~INode()
         delete left_;
     if (right_)
         delete right_;
-}
-
-INode::INode(const string &w)
-{
-    this->data_ = INodeData(w);
-    this->left_ = NULL;
-    this->right_ = NULL;
-    this->height_ = 1;
+    delete data_;
 }
 
 /************************************************************
@@ -57,9 +59,9 @@ int INode::getHeight(INode *node)
 /*************************************
  *    GET THE DATA OF THE NODE       *
  *************************************/
-INodeData INode::data()
+INodeData * INode::data()
 {
-    return this->data_;
+    return data_;
 }
 
 /*************************************

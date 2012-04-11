@@ -60,6 +60,11 @@ bool Document::docNameComp(Document doc1, Document doc2)
     return (doc1.name().compare(doc2.name()) <= 0);
 }
 
+bool Document::docFreqComp(Document doc1, Document doc2)
+{
+    return (doc1.occurrence() > doc2.occurrence());
+}
+
 /*****************************************************************************
  *      MERGE TWO LIST OF DOCUMENTS, KEEP ONLY COMMON ONES                   *
  *****************************************************************************/

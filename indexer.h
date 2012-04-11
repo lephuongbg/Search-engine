@@ -9,7 +9,7 @@ class Indexer
 private:
     INode * indexer_;
     stack<string> query_;
-    vector<string> result_;
+    vector<Document> result_;
 
 public:
     Indexer();
@@ -17,12 +17,13 @@ public:
     void insertKey(const string & keyword);
     static INode * insertKey(INode * node, const string & keyword);
     static INode * reBalance(INode * node);
-    INode * find(const string & keyword);
-    //void deleteKey(string keyword);
+    INode * at(const string & keyword);
     void setQuery(const string &query);
-    void excute();
+    void execute();
+    vector<Document> result();
     void addDocument(const string &docname);
     vector<Document> operator[](const string &keyword);
+    static bool isIgnore(const string &keyword);
     static void traverse(INode * node);
     INode * indexer();
 };

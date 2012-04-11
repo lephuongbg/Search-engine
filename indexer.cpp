@@ -1,7 +1,9 @@
 #include "indexer.h"
+#include <algorithm>
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 
 // CONSTRUCTOR
 Indexer::Indexer()
@@ -24,21 +26,26 @@ void Indexer::insertKey(const string & keyword)
 
 INode * Indexer::insertKey(INode * node, const string &keyword)
 {
+    //If the tree is empty, create a new node for it
     if (node == NULL)
     {
         INode * new_node = new INode(keyword);
         return new_node;
     }
-    if (keyword <= node->data().word())
+    //If keyword is smaller than current node key, set it to the left
+    if (keyword < node->data()->word())
     {
         node->setLeft(insertKey(node->left(), keyword));
         return reBalance(node);
     }
-    else
+    //If keyword is greater than current node key, set it to the right
+    else if (keyword > node->data()->word())
     {
         node->setRight(insertKey(node->right(), keyword));
         return reBalance(node);
     }
+    //If keyword has already exist, return the node
+    return node;
 }
 
 // REBALANCE THE INDEXER'S STRUCTURE
@@ -105,12 +112,12 @@ INode * Indexer::reBalance(INode *node)
 }
 
 // FIND A NODE IN THE INDEXER CONTAIN PROVIDED KEYWORD
-INode *Indexer::find(const string &keyword)
+INode *Indexer::at(const string &keyword)
 {
     INode * ptr = indexer_;
-    while (ptr != NULL && keyword != ptr->data().word())
+    while (ptr != NULL && keyword != ptr->data()->word())
     {
-        if (keyword < ptr->data().word())
+        if (keyword < ptr->data()->word())
             ptr = ptr->left();
         else
             ptr = ptr->right();
@@ -161,7 +168,7 @@ void Indexer::execute()
 {
     stack<string> s_operator;
     stack< vector<Document> > s_operand;
-    vector<Document> result, o1, o2;
+    vector<Document> o1, o2;
     string buffer("");
     
     while (!this->query_.empty())
@@ -181,14 +188,14 @@ void Indexer::execute()
                 s_operand.pop();
                 o2 = s_operand.top();
                 s_operand.pop();
-                result = Document::conjunct(o1, o2);
-                s_operand.push( result );
+                result_ = Document::conjunct(o1, o2);
+                s_operand.push(result_);
             }
             s_operator.push(buffer);
         }
         else
         {
-            s_operand.push(this->indexer_[buffer]);
+            s_operand.push((*this)[buffer]);
         }
     }
     
@@ -201,8 +208,8 @@ void Indexer::execute()
             s_operand.pop();
             o2 = s_operand.top();
             s_operand.pop();
-            result = Document::conjunct(o1, o2);
-            s_operand.push( result );
+            result_ = Document::conjunct(o1, o2);
+            s_operand.push(result_);
         }
         else
         {
@@ -211,34 +218,75 @@ void Indexer::execute()
             s_operand.pop();
             o2 = s_operand.top();
             s_operand.pop();
-            result = Document::conjunct(o1, o2);
-            s_operand.push( result );
+            result_ = Document::conjunct(o1, o2);
+            s_operand.push(result_);
         }
     }
-    
-    //this->result_ = result;
+
+    result_ = s_operand.top();
+}
+
+vector<Document> Indexer::result()
+{
+    // Sort result by score before return it out
+    // sort(result_.begin(), result_.end(), Document::docFreqComp);
+    return result_;
 }
 
 // INDEX A DOCUMENT
-void Indexer::addDocument(const string &)
+void Indexer::addDocument(const string &docname)
 {
+    ifstream docfile;
+    docfile.open(docname.c_str());
+    Document doc;
+    doc.name(docname);
+    string keyword;
+    if (docfile.is_open())
+    {
+        while (docfile.good())
+        {
+            docfile >> keyword;
+            if (isIgnore(keyword))
+                continue;
+            this->insertKey(keyword);
+            this->at(keyword)->data()->docs(doc);
+        }
+    }
 }
 
 // OVERLOADING OPERATOR [] FOR FAST ACCESS NODE VALUE BY KEY WORD
 vector<Document> Indexer::operator[](const string &keyword)
 {
     vector<Document> result;
-    INode * keynode = this->find(keyword);
+    INode * keynode = this->at(keyword);
     if (keynode == NULL)
     {
         this->insertKey(keyword);
     }
     else
     {
-        result = keynode->data().docs();
+        result = keynode->data()->docs();
     }
 
     return result;
+}
+
+bool Indexer::isIgnore(const string &keyword)
+{
+    switch (keyword.at(0))
+    {
+    case '\0':
+    case '<':
+        return true;
+    case '.':
+        if (keyword.size() == 1)
+            return true;
+        break;
+    default:
+        break;
+    }
+
+    return false;
 }
 
 // PRINT ALL KEYWORDS IN INDEXER
@@ -247,7 +295,7 @@ void Indexer::traverse(INode *node)
     if (node != NULL)
     {
         traverse(node->left());
-        std::cout << node->data().word() << '\n';
+        std::cout << node->data()->word() << '\n';
         traverse(node->right());
     }
 }

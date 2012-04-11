@@ -6,12 +6,13 @@
  *******************************/
 INodeData::INodeData()
 {
-    this->sorted_ = false;
+    sorted_ = false;
 }
 
 INodeData::INodeData(const string &w)
 {
-    this->word_ = w;
+    word_ = w;
+    sorted_ = false;
 }
 
 /*******************************
