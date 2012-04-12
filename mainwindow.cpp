@@ -21,6 +21,13 @@ MainWindow::MainWindow(QWidget *parent) :
     labels << tr("File name") << tr("Rank");
     ui->containersView->setHorizontalHeaderLabels(labels);
 
+    // Right align showIndexedData button
+    QWidget* spacer = new QWidget();
+    spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    // toolBar is a pointer to an existing toolbar
+    ui->toolBar->addWidget(spacer);
+    ui->toolBar->addAction(ui->actionShowIndexedData);
+
     connect(this, SIGNAL(updatedList(QStringList&)), this, SLOT(updateFileView(QStringList&)));
     connect(this, SIGNAL(updatedWordList()), this, SLOT(updateWordsView()));
 }

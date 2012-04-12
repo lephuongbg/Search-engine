@@ -271,7 +271,6 @@
    <addaction name="actionClear"/>
    <addaction name="actionClose"/>
    <addaction name="separator"/>
-   <addaction name="actionShowIndexedData"/>
   </widget>
   <action name="actionAddFiles">
    <property name="icon">
@@ -374,12 +373,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>368</x>
-     <y>44</y>
+     <x>370</x>
+     <y>77</y>
     </hint>
     <hint type="destinationlabel">
-     <x>418</x>
-     <y>44</y>
+     <x>526</x>
+     <y>77</y>
     </hint>
    </hints>
   </connection>
