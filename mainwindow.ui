@@ -274,7 +274,7 @@
   </widget>
   <action name="actionAddFiles">
    <property name="icon">
-    <iconset theme="open">
+    <iconset>
      <normalon>:/document-new.png</normalon>
     </iconset>
    </property>

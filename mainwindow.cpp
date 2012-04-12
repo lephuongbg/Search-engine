@@ -246,9 +246,7 @@ void MainWindow::on_byRelevant_clicked()
 // SORT BY NAME
 void MainWindow::on_byName_clicked()
 {
-    QStringList nameSortedResultList = resultList;
-    nameSortedResultList.sort();
-    updateFileView(nameSortedResultList);
+    displayListModel.sort(0);
 }
 
 // SHOW/HIDE INDEXED DATA STACK WIDGET
