@@ -119,7 +119,9 @@ void MainWindow::getStopWords()
 
     // Load stop words list
     QMessageBox msbox(this);
+    msbox.setWindowTitle("Search Engine Filter");
     msbox.setText("Do you want to load stop words list first?");
+    msbox.setIcon(QMessageBox::Question);
     msbox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
     msbox.setDefaultButton(QMessageBox::Ok);
 
