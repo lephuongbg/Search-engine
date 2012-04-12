@@ -17,6 +17,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void indexStopWordsFile(const string &fileName);
+    void addDocuments(vector<string> docNames);
     
 private slots:
     void on_actionAddFiles_triggered();

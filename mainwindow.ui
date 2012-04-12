@@ -24,7 +24,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -279,10 +279,13 @@
     </iconset>
    </property>
    <property name="text">
-    <string>Add Files</string>
+    <string>Add &amp;Files</string>
    </property>
    <property name="toolTip">
     <string>Add Files</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="actionAddFolder">
@@ -293,6 +296,9 @@
    </property>
    <property name="text">
     <string>Add Folder...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+O</string>
    </property>
   </action>
   <action name="actionClear">
@@ -307,6 +313,9 @@
    <property name="toolTip">
     <string>Reset All Data</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
   </action>
   <action name="actionClose">
    <property name="icon">
@@ -316,6 +325,9 @@
    </property>
    <property name="text">
     <string>Close</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
    </property>
   </action>
   <action name="actionShowIndexedData">
@@ -330,6 +342,9 @@
    <property name="text">
     <string>Show Indexed Data</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
    <property name="autoRepeat">
     <bool>false</bool>
    </property>
@@ -338,6 +353,15 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>queryEdit</tabstop>
+  <tabstop>fileView</tabstop>
+  <tabstop>filterButton</tabstop>
+  <tabstop>byName</tabstop>
+  <tabstop>byRelevant</tabstop>
+  <tabstop>wordsView</tabstop>
+  <tabstop>containersView</tabstop>
+ </tabstops>
  <resources>
   <include location="icon.qrc"/>
  </resources>

@@ -31,6 +31,22 @@ MainWindow::~MainWindow()
     delete indexer;
 }
 
+// ALLOW GET STOP WORDS FILE NAME FROM OUTSIDE THE CLASS
+void MainWindow::indexStopWordsFile(const string &fileName)
+{
+    indexer->indexStopWords(fileName);
+    stopWordsAsked = true;
+}
+
+// ALLOW GET DOCUMENTS LIST FROM OUTSIDE THE CLASS
+void MainWindow::addDocuments(vector<string> docNames)
+{
+    QStringList newDocNames;
+    for (vector<string>::iterator it = docNames.begin(); it != docNames.end(); it++)
+        newDocNames.append(QString::fromStdString(*it));
+    index(newDocNames);
+}
+
 // SELECT FILES FROM THE FILE SYSTEM
 void MainWindow::on_actionAddFiles_triggered()
 {

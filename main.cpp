@@ -20,9 +20,21 @@ int main(int argc, char *argv[])
 
     // Enable GUI if --no-gui is not specified
     if (it == args.end())
-    {
+    {   
         QApplication a(argc, argv);
         MainWindow w;
+        for (it = args.begin(); it != args.end() && *it != "--stop-words-file"; it++);
+        if (it != args.end())
+        {
+            // Consume option
+            args.erase(it);
+            // Index stop words list
+            w.indexStopWordsFile(*it);
+            // Consume argument
+            args.erase(it);
+        }
+        w.addDocuments(args);
+
         w.show();
 
         return a.exec();
