@@ -20,19 +20,44 @@ public:
     
 private slots:
     void on_actionAddFiles_triggered();
+
     void on_actionClose_triggered();
-    void updateFileView();
+
+    void on_actionAddFolder_triggered();
+
+    void on_actionClear_triggered();
+
+    void on_filterButton_clicked();
+
+    void updateFileView(QStringList &list);
+
+    void updateWordsView();
+
+    void on_byRelevant_clicked();
+
+    void on_byName_clicked();
+
+    void on_actionShowIndexedData_triggered(bool checked);
+
+    void on_wordsView_clicked(const QModelIndex &index);
 
 signals:
-    void fileListChanged();
+    void updatedList(QStringList &list);
+    void updatedWordList();
+
 private:
     Ui::MainWindow *ui;
     Indexer * indexer;
     QStringList fileList;
-    QStringListModel fileListModel;
+    QStringList resultList;
+    QStringListModel displayListModel;
+    QStringList wordList;
+    QStringListModel wordListModel;
+
     bool stopWordsAsked;
     void getStopWords();
-    void index(QStringList &list);
+    void index(QStringList list);
+    void updateWordList(INode * list);
 };
 
 #endif // MAINWINDOW_H

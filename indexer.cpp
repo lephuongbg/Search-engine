@@ -230,7 +230,7 @@ void Indexer::execute()
 vector<Document> Indexer::result()
 {
     // Sort result by score before return it out
-    // sort(result_.begin(), result_.end(), Document::docFreqComp);
+    sort(result_.begin(), result_.end(), Document::docFreqComp);
     return result_;
 }
 
@@ -323,15 +323,15 @@ bool Indexer::isGarbage(char c)
 
 void Indexer::filter(string &keyword)
 {
-    if (keyword.size() == 0)
-        return;
     // Remove all characters defined in isGarbage method
     keyword.resize(std::remove_if(keyword.begin(), keyword.end(), isGarbage) - keyword.begin());
 
-    // Remove comma and punctuation at the end of the word
-    if (keyword.rfind(',') == keyword.length() - 1)
+    // Remove comma at the end of the word
+    if (keyword.size() != 0 && keyword.rfind(',') == keyword.length() - 1)
         keyword.erase(keyword.end()-1);
-    if (keyword.rfind('.') == keyword.length() - 1)
+
+    // Remove punctuation at the end of the word
+    if (keyword.size() != 0 && keyword.rfind('.') == keyword.length() - 1)
         keyword.erase(keyword.end()-1);
 }
 
