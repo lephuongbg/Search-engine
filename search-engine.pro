@@ -29,4 +29,4 @@ FORMS += \
     mainwindow.ui
 
 RESOURCES += \
-    icon.qrc
+    icons.qrc
