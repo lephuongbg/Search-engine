@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Search Engine Project</string>
   </property>
+  <property name="windowIcon">
+   <iconset theme="document-preview"/>
+  </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonTextBesideIcon</enum>
   </property>
@@ -274,9 +277,9 @@
   </widget>
   <action name="actionAddFiles">
    <property name="icon">
-    <iconset>
-     <normalon>:/document-new.png</normalon>
-    </iconset>
+    <iconset theme="document-new" resource="icons.qrc">
+     <normaloff>:/document-new.png</normaloff>
+     <normalon>:/document-new.png</normalon>:/document-new.png</iconset>
    </property>
    <property name="text">
     <string>Add &amp;Files</string>
@@ -290,7 +293,7 @@
   </action>
   <action name="actionAddFolder">
    <property name="icon">
-    <iconset>
+    <iconset theme="folder-new">
      <normalon>:/folder-new.png</normalon>
     </iconset>
    </property>
@@ -303,7 +306,7 @@
   </action>
   <action name="actionClear">
    <property name="icon">
-    <iconset resource="icon.qrc">
+    <iconset theme="view-refresh" resource="icons.qrc">
      <normaloff>:/view-refresh.png</normaloff>
      <normalon>:/view-list-details-symbolic.png</normalon>:/view-refresh.png</iconset>
    </property>
@@ -319,7 +322,7 @@
   </action>
   <action name="actionClose">
    <property name="icon">
-    <iconset>
+    <iconset theme="window-close">
      <normalon>:/window-close.png</normalon>
     </iconset>
    </property>
@@ -335,7 +338,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="icon.qrc">
+    <iconset theme="view-list-details" resource="icons.qrc">
      <normaloff>:/view-list-details-symbolic.png</normaloff>
      <normalon>:/view-list-details-symbolic.png</normalon>:/view-list-details-symbolic.png</iconset>
    </property>
@@ -363,7 +366,7 @@
   <tabstop>containersView</tabstop>
  </tabstops>
  <resources>
-  <include location="icon.qrc"/>
+  <include location="icons.qrc"/>
  </resources>
  <connections>
   <connection>
