@@ -290,6 +290,7 @@ vector<Document> Indexer::operator[](const string &keyword)
     return result;
 }
 
+// IGNORE CERTAIN WORDS
 bool Indexer::isIgnore(const string &keyword)
 {
     if (keyword.size() == 0)
