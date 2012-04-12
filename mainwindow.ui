@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>522</width>
+    <width>538</width>
     <height>394</height>
    </rect>
   </property>
@@ -268,9 +268,10 @@
    </attribute>
    <addaction name="actionAddFiles"/>
    <addaction name="actionAddFolder"/>
-   <addaction name="actionShowIndexedData"/>
    <addaction name="actionClear"/>
    <addaction name="actionClose"/>
+   <addaction name="separator"/>
+   <addaction name="actionShowIndexedData"/>
   </widget>
   <action name="actionAddFiles">
    <property name="icon">
