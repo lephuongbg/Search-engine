@@ -15,10 +15,6 @@ int main(int argc, char *argv[])
         args.insert(args.end(), string(argv[i]));
     vector<string>::iterator it;
 
-    // For debugging
-    string word(",");
-    Indexer::filter(word);
-
     // Check for no gui option
     for (it = args.begin(); it != args.end() && *it != "--no-gui"; it++);
 

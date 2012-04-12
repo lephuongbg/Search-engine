@@ -326,11 +326,9 @@ void Indexer::filter(string &keyword)
     // Remove all characters defined in isGarbage method
     keyword.resize(std::remove_if(keyword.begin(), keyword.end(), isGarbage) - keyword.begin());
 
-    // Remove comma at the end of the word
+    // Remove comma and punctuation at the end of the word
     if (keyword.size() != 0 && keyword.rfind(',') == keyword.length() - 1)
         keyword.erase(keyword.end()-1);
-
-    // Remove punctuation at the end of the word
     if (keyword.size() != 0 && keyword.rfind('.') == keyword.length() - 1)
         keyword.erase(keyword.end()-1);
 }

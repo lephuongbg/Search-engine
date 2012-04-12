@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>document-new.png</file>
+        <file>folder-new.png</file>
+        <file>view-list-details-symbolic.png</file>
+        <file>view-refresh.png</file>
+        <file>window-close.png</file>
+    </qresource>
+</RCC>

@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Search Engine Project</string>
   </property>
+  <property name="toolButtonStyle">
+   <enum>Qt::ToolButtonTextBesideIcon</enum>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_3">
     <property name="margin">
@@ -21,7 +24,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -171,7 +174,7 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <widget class="QWidget" name="">
+          <widget class="QWidget" name="layoutWidget">
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <item>
              <widget class="QLabel" name="label">
@@ -189,7 +192,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="">
+          <widget class="QWidget" name="layoutWidget1">
            <layout class="QVBoxLayout" name="verticalLayout_5">
             <item>
              <widget class="QLabel" name="label_2">
@@ -250,8 +253,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>20</width>
-     <height>20</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <property name="windowTitle">
@@ -270,6 +273,11 @@
    <addaction name="actionClose"/>
   </widget>
   <action name="actionAddFiles">
+   <property name="icon">
+    <iconset theme="open">
+     <normalon>:/document-new.png</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Add Files</string>
    </property>
@@ -278,11 +286,21 @@
    </property>
   </action>
   <action name="actionAddFolder">
+   <property name="icon">
+    <iconset>
+     <normalon>:/folder-new.png</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Add Folder...</string>
    </property>
   </action>
   <action name="actionClear">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/view-refresh.png</normaloff>
+     <normalon>:/view-list-details-symbolic.png</normalon>:/view-refresh.png</iconset>
+   </property>
    <property name="text">
     <string>Reset</string>
    </property>
@@ -291,6 +309,11 @@
    </property>
   </action>
   <action name="actionClose">
+   <property name="icon">
+    <iconset>
+     <normalon>:/window-close.png</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Close</string>
    </property>
@@ -299,12 +322,25 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/view-list-details-symbolic.png</normaloff>
+     <normalon>:/view-list-details-symbolic.png</normalon>:/view-list-details-symbolic.png</iconset>
+   </property>
    <property name="text">
     <string>Show Indexed Data</string>
    </property>
+   <property name="autoRepeat">
+    <bool>false</bool>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="icon.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>queryEdit</sender>

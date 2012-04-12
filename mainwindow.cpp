@@ -12,8 +12,11 @@ MainWindow::MainWindow(QWidget *parent) :
     indexer = new Indexer;
     stopWordsAsked = false;
 
+    // Connect each list view to its corresponding model
     ui->fileView->setModel(&this->displayListModel);
     ui->wordsView->setModel(&this->wordListModel);
+
+    // Set the labels for the containers view
     QStringList labels;
     labels << tr("File name") << tr("Rank");
     ui->containersView->setHorizontalHeaderLabels(labels);
@@ -28,6 +31,7 @@ MainWindow::~MainWindow()
     delete indexer;
 }
 
+// SELECT FILES FROM THE FILE SYSTEM
 void MainWindow::on_actionAddFiles_triggered()
 {
     if (!stopWordsAsked)
@@ -47,12 +51,13 @@ void MainWindow::on_actionAddFiles_triggered()
     }
 }
 
+// CLOSE THE PROGRAM
 void MainWindow::on_actionClose_triggered()
 {
     this->close();
 }
 
-
+// INDEX ALL SELECTED FILES
 void MainWindow::index(QStringList list)
 {
     // Index selected files
@@ -71,6 +76,7 @@ void MainWindow::index(QStringList list)
     emit updatedWordList();
 }
 
+// UPDATE THE LIST OF ALL INDEXED WORDS
 void MainWindow::updateWordList(INode *list)
 {
     if (list == indexer->indexer())
@@ -83,6 +89,7 @@ void MainWindow::updateWordList(INode *list)
     }
 }
 
+// ADD STOP WORDS LIST TO THE INDEXER
 void MainWindow::getStopWords()
 {
     QFileDialog dialog(this);
@@ -102,6 +109,7 @@ void MainWindow::getStopWords()
     }
 }
 
+// CHOOSE FOLDER TO SELECT ALL FILES IN IT
 void MainWindow::on_actionAddFolder_triggered()
 {
     if (!stopWordsAsked)
@@ -119,9 +127,7 @@ void MainWindow::on_actionAddFolder_triggered()
     {
         QStringList newlist = dialog.selectedFiles();
         QDir folder(newlist.at(0));
-        newlist = folder.entryList();
-        newlist.removeFirst(); // Remove .
-        newlist.removeFirst(); // Remove ..
+        newlist = folder.entryList(QDir::Files | QDir::NoDotAndDotDot);
         // Stop if the folder is empty
         if (newlist.size() == 0)
             return;
@@ -131,6 +137,7 @@ void MainWindow::on_actionAddFolder_triggered()
     }
 }
 
+// RESET THE PROGRAM TO INITIAL STATE
 void MainWindow::on_actionClear_triggered()
 {
     // Clear files view
@@ -144,7 +151,10 @@ void MainWindow::on_actionClear_triggered()
     // Clear containers view
     int i = ui->containersView->rowCount();
     while (i >= 0)
+    {
         ui->containersView->removeRow(i);
+        i--;
+    }
 
     // Clear query
     ui->queryEdit->clear();
@@ -156,30 +166,43 @@ void MainWindow::on_actionClear_triggered()
     // Clear indexer
     delete indexer;
     indexer = new Indexer;
+
+    // Reset stopWordsAsked bool value
+    stopWordsAsked = false;
 }
 
+// EXECUTE THE QUERY FROM QUERY BOX
 void MainWindow::on_filterButton_clicked()
 {
     QString query(ui->queryEdit->text());
+
+    // If the query is empty, redisplay all indexed files
     if (query.size() == 0)
     {
         emit updatedList(fileList);
+        // Disable sort options
         ui->byName->setEnabled(false);
         ui->byRelevant->setEnabled(false);
         return;
     }
 
+    // Add query to the indexer and excute it
     indexer->setQuery(query.toStdString());
     indexer->execute();
+
+    // Display result
     vector<Document> rankSortedResult = indexer->result();
     resultList.clear();
     for (vector<Document>::iterator it = rankSortedResult.begin(); it != rankSortedResult.end(); it++)
         resultList.append(QString::fromStdString(it->name()));
     emit updatedList(resultList);
+
+    // Enable sort options
     ui->byName->setEnabled(true);
     ui->byRelevant->setEnabled(true);
 }
 
+// UPDATE THE FILE LIST VIEW
 void MainWindow::updateFileView(QStringList &list)
 {
     // Only keep file names from the path list
@@ -191,16 +214,20 @@ void MainWindow::updateFileView(QStringList &list)
     displayListModel.setStringList(list);
 }
 
+// UPDATE THE INDEXED WORDS VIEW
 void MainWindow::updateWordsView()
 {
     wordListModel.setStringList(wordList);
 }
 
+// SORT BY RELEVANT
 void MainWindow::on_byRelevant_clicked()
 {
+    // Redisplay the old result because it's already sorted by relevant
     updateFileView(resultList);
 }
 
+// SORT BY NAME
 void MainWindow::on_byName_clicked()
 {
     QStringList nameSortedResultList = resultList;
@@ -208,6 +235,7 @@ void MainWindow::on_byName_clicked()
     updateFileView(nameSortedResultList);
 }
 
+// SHOW/HIDE INDEXED DATA STACK WIDGET
 void MainWindow::on_actionShowIndexedData_triggered(bool checked)
 {
     if (checked)
@@ -216,32 +244,43 @@ void MainWindow::on_actionShowIndexedData_triggered(bool checked)
         ui->stackedWidget->setCurrentIndex(0);
 }
 
+// SHOW RELATING INFORMATION WHEN EACH WORD IS SELECTED
 void MainWindow::on_wordsView_clicked(const QModelIndex &index)
 {
+    // Get the containers information for the word
     vector<Document> containerResult;
-
     containerResult = indexer->at(wordListModel.stringList().at(index.row()).toStdString())->data()->docs();
-    ui->containersView->clearContents();
+
+    // Clear the containers view
     int i = ui->containersView->rowCount();
     while (i >= 0)
     {
         ui->containersView->removeRow(i);
         i--;
     }
+
+    // Iterate through all container of the word
     i = 0;
     vector<Document>::iterator it = containerResult.begin();
     while (it != containerResult.end())
     {
         QTableWidgetItem * filename = new QTableWidgetItem;
         QTableWidgetItem * filerank = new QTableWidgetItem;
+        // Only show the name of the file
         QString name(QString::fromStdString(it->name()));
         name.remove(0, name.lastIndexOf('/') + 1);
 
+        // Add row to the view
         ui->containersView->insertRow(i);
+
+        // Display container name
         filename->setText(name);
         ui->containersView->setItem(i, 0, filename);
+
+        // Display container rank
         filerank->setText(QString::number(it->occurrence()));
         ui->containersView->setItem(i, 1, filerank);
+
         it++;
         i++;
     }

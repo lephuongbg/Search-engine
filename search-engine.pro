@@ -18,7 +18,15 @@ HEADERS += \
 
 OTHER_FILES += \
     README \
-    stopwords
+    stopwords \
+    document-new.png \
+    folder-new.png \
+    window-close.png \
+    view-refresh.png \
+    view-list-details-symbolic.png
 
 FORMS += \
     mainwindow.ui
+
+RESOURCES += \
+    icon.qrc
