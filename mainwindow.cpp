@@ -28,6 +28,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->toolBar->addWidget(spacer);
     ui->toolBar->addAction(ui->actionShowIndexedData);
 
+    // Disable right click on toolbar
+    this->setContextMenuPolicy(Qt::NoContextMenu);
+
+    // Connect signals to corresponding slots
     connect(this, SIGNAL(updatedList(QStringList&)), this, SLOT(updateFileView(QStringList&)));
     connect(this, SIGNAL(updatedWordList()), this, SLOT(updateWordsView()));
 }

@@ -7,14 +7,16 @@ SOURCES += main.cpp \
     inode.cpp \
     indexer.cpp \
     inodedata.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    slistview.cpp
 
 HEADERS += \
     document.h \
     inode.h \
     indexer.h \
     inodedata.h \
-    mainwindow.h
+    mainwindow.h \
+    slistview.h
 
 OTHER_FILES += \
     README \
