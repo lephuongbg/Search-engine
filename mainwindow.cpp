@@ -95,7 +95,7 @@ void MainWindow::index(QStringList list)
         {
             indexer->addDocument(it->toStdString());
             fileList.append(*it);
-            qDebug() << *it;
+            qDebug() << "Indexed" << *it;
             emit updatedList(fileList);
         }
     }
@@ -286,7 +286,7 @@ void MainWindow::on_wordsView_clicked(const QModelIndex &index)
         i--;
     }
 
-    // Iterate through all container of the word
+    // Iterate through all containers of the word
     i = 0;
     vector<Document>::iterator it = containerResult.begin();
     while (it != containerResult.end())
@@ -305,9 +305,10 @@ void MainWindow::on_wordsView_clicked(const QModelIndex &index)
         ui->containersView->setItem(i, 0, filename);
 
         // Display container rank
-        filerank->setText(QString::number(it->occurrence()));
+        filerank->setData(Qt::DisplayRole, it->occurrence());  // Use setData() to sort numbers correctly
         ui->containersView->setItem(i, 1, filerank);
 
+        // Increase iterator
         it++;
         i++;
     }
