@@ -269,6 +269,7 @@ void Indexer::addDocument(const string &docname)
             }
         }
     }
+    docfile.close();
 }
 
 // OVERLOADING OPERATOR [] FOR FAST ACCESS NODE VALUE BY KEY WORD
