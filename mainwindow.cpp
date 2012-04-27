@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QProgressDialog>
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -87,9 +88,18 @@ void MainWindow::on_actionClose_triggered()
 // INDEX ALL SELECTED FILES
 void MainWindow::index(QStringList list)
 {
+    // Progress dialog
+    QProgressDialog progress("Indexing files...", "Abort", 0, list.count(), this);
+    progress.setWindowModality(Qt::WindowModal);
     // Index selected files
     for (QStringList::Iterator it = list.begin(); it != list.end(); it++)
     {
+        progress.setValue(it-list.begin());
+        QString label = "Indexing ";
+        label.append(*it);
+        progress.setLabelText(label);
+        if (progress.wasCanceled())
+                break;
         // Do not reindex indexed file
         if (!fileList.contains(*it))
         {
@@ -99,6 +109,8 @@ void MainWindow::index(QStringList list)
             emit updatedList(fileList);
         }
     }
+
+    progress.setValue(list.count());
     updateWordList(this->indexer->indexer());
     emit updatedWordList();
 }
