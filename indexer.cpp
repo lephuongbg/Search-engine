@@ -210,7 +210,7 @@ void Indexer::execute()
         }
         else if (buffer == "OR")  // else, it is operator OR
         {        	
-            while (! s_operand.empty() && s_operator.top() == "AND")  // if last operator has higher priority (AND operator)
+            while (! s_operator.empty() && s_operator.top() == "AND")  // if last operator has higher priority (AND operator)
             {
                 s_operator.pop();  // we pop the AND operator out
                 
