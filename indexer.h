@@ -5,6 +5,8 @@
 #include <stack>
 #include <vector>
 
+enum Status {ERROR_SYNTAX, WARNING_STOPWORD, SUCCESS};
+
 class Indexer
 {
 protected:
@@ -12,6 +14,7 @@ protected:
     set<string> stopwords_;
     stack<string> query_;
     vector<Document> result_;
+    Status status_;
 
 public:
     Indexer();
@@ -32,6 +35,10 @@ public:
     // For debugging
     static void traverse(INode * node);
     INode * indexer();
+    
+    Status status();
+    static vector<Document> match(INode * node, string regex);
+    static vector<Document> match(INode * node, vector<string> q_regex);
 };
 
 #endif // INDEXER_H
