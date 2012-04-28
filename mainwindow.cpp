@@ -3,6 +3,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QProgressDialog>
+#include <QElapsedTimer>
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -92,6 +93,8 @@ void MainWindow::index(QStringList list)
     QProgressDialog progress("Indexing files...", "Abort", 0, list.count(), this);
     progress.setWindowModality(Qt::WindowModal);
 
+    QElapsedTimer timer;
+    timer.start();
     // Index selected files
     for (QStringList::Iterator it = list.begin(); it != list.end(); it++)
     {
@@ -109,8 +112,9 @@ void MainWindow::index(QStringList list)
         // Now index each file
         indexIndividual(*it);
     }
-
+    qDebug() << "Indexing time: " << timer.elapsed() / 1000.0 << "s";
     progress.setValue(list.count());
+    emit updatedList(fileList);
     updateWordList(this->indexer->indexer());
     emit updatedWordList();
 }
@@ -123,7 +127,6 @@ void MainWindow::indexIndividual(const QString &filename)
         indexer->addDocument(filename.toStdString());
         fileList.append(filename);
         qDebug() << "Indexed" << filename;
-        emit updatedList(fileList);
     }
 }
 

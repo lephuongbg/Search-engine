@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include "indexer.h"
+#include "time.h"
 
 using namespace std;
 
@@ -55,13 +56,15 @@ int main(int argc, char *argv[])
         args.erase(it);
     }
 
+    // Start timer
+    time_t start = clock();
     // Index all documents from command line args
-    cout << "Indexing...\n";
     for (it = args.begin(); it != args.end(); it++)
     {
+        cout << "Indexing " << *it << "...\n";
         I.addDocument(*it);
     }
-    cout << "Complete.\n";
+    cout << "Complete in" << (float) (clock()-start)/CLOCKS_PER_SEC << " second(s).\n";
 //    Indexer::traverse(I.indexer());
     while (1)
     {
