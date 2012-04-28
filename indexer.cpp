@@ -259,7 +259,7 @@ void Indexer::addDocument(const string &docname)
             {
                 // Read each word one by one in the document
                 docfile >> keyword;
-                // Remove unnecessary character from keyword
+                // Remove unnecessary character from keyword and convert it to lowercase
                 filter(keyword);
                 // If keyword is insignificantly important, ignoreit
                 if (isIgnore(keyword))
@@ -327,6 +327,9 @@ void Indexer::filter(string &keyword)
 {
     // Remove all characters defined in isGarbage method
     keyword.resize(std::remove_if(keyword.begin(), keyword.end(), isGarbage) - keyword.begin());
+
+    // Convert all characters to lowercase
+    std::transform(keyword.begin(), keyword.end(), keyword.begin(), ::tolower);
 }
 
 // RETRIEVE STOP WORDS FROM FILE
