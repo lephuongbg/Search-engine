@@ -1,7 +1,6 @@
 QT += core gui
 TEMPLATE = app
 CONFIG += console
-QMAKE_CXXFLAGS += -std=c++0x
 
 SOURCES += main.cpp \
     document.cpp \
