@@ -106,19 +106,25 @@ void MainWindow::index(QStringList list)
         if (progress.wasCanceled())
                 break;
 
-        // Do not reindex indexed file
-        if (!fileList.contains(*it))
-        {
-            indexer->addDocument(it->toStdString());
-            fileList.append(*it);
-            qDebug() << "Indexed" << *it;
-            emit updatedList(fileList);
-        }
+        // Now index each file
+        indexIndividual(*it);
     }
 
     progress.setValue(list.count());
     updateWordList(this->indexer->indexer());
     emit updatedWordList();
+}
+
+void MainWindow::indexIndividual(const QString &filename)
+{
+    // Do not reindex indexed file
+    if (!fileList.contains(filename))
+    {
+        indexer->addDocument(filename.toStdString());
+        fileList.append(filename);
+        qDebug() << "Indexed" << filename;
+        emit updatedList(fileList);
+    }
 }
 
 // UPDATE THE LIST OF ALL INDEXED WORDS
