@@ -14,9 +14,8 @@
    <string>Search Engine Project</string>
   </property>
   <property name="windowIcon">
-   <iconset theme="document-preview">
-    <normaloff/>
-   </iconset>
+   <iconset resource="icons.qrc">
+    <normaloff>:/search-text.png</normaloff>:/search-text.png</iconset>
   </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonTextBesideIcon</enum>
