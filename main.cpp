@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
         cout << "Indexing " << *it << "...\n";
         I.addDocument(*it);
     }
-    cout << "Complete in" << (float) (clock()-start)/CLOCKS_PER_SEC << " second(s).\n";
+    cout << "Complete in " << (float) (clock() - start)/CLOCKS_PER_SEC << " second(s).\n";
 //    Indexer::traverse(I.indexer());
     while (1)
     {
