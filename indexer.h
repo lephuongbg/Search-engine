@@ -5,8 +5,6 @@
 #include <stack>
 #include <vector>
 
-enum Status {ERROR_SYNTAX, WARNING_STOPWORD, SUCCESS};
-
 class Indexer
 {
 protected:
@@ -14,7 +12,7 @@ protected:
     set<string> stopwords_;
     stack<string> query_;
     vector<Document> result_;
-    Status status_;
+    enum {SYNTAX_ERROR, STOPWORD_WARNING, SUCCESS} status_;
 
 public:
     Indexer();

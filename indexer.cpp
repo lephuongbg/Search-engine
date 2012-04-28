@@ -408,7 +408,7 @@ INode *Indexer::indexer()
 // HANDLE THE REGEX STRING TO TURN IT INTO A SPECIFIC PATTERN OBJECT. MAKE THE TASK MORE COMFORTABLE.
 vector<Document> Indexer::match(INode *node, string regex)
 {
-	unsigned int pos;  // An anchor to determine the position of '*' character
+    int pos;  // An anchor to determine the position of '*' character
 	vector<string> pattern;  // A minified object used to store regex string in an easy-to-handle format
 	
 	while ((pos = regex.find("**")) != string::npos)  // Standardize the wildcard string
@@ -435,7 +435,8 @@ vector<Document> Indexer::match(INode *node, vector<string> pattern)
 	
 	vector<string> temp;
 	string word = node->data()->word(); // Cache out the INode word data value
-	unsigned int i, pos;
+    unsigned int i;
+    int pos;
 	string first, last;
 	bool suitable = true; // A flag determine if the pattern match the word or not
 	first = pattern.at(0), last = pattern.at(pattern.size() - 1);  // Cache the first and last pattern
@@ -449,7 +450,7 @@ vector<Document> Indexer::match(INode *node, vector<string> pattern)
 		word = word.substr(first.size());  // cut the first matching part out of the word
 	}
 	
-	if ((pos = word.rfind(last)) == string::npos || pos != word.size() - last.size())  // If the last pattern is not at the end of the word
+    if ((pos = word.rfind(last)) == string::npos || (unsigned) pos != word.size() - last.size())  // If the last pattern is not at the end of the word
 	{
 		suitable = false;  // turn the flag
 	}
