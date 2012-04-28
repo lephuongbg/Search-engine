@@ -91,15 +91,21 @@ void MainWindow::index(QStringList list)
     // Progress dialog
     QProgressDialog progress("Indexing files...", "Abort", 0, list.count(), this);
     progress.setWindowModality(Qt::WindowModal);
+
     // Index selected files
     for (QStringList::Iterator it = list.begin(); it != list.end(); it++)
     {
+        // Announce progress
         progress.setValue(it-list.begin());
-        QString label = "Indexing ";
-        label.append(*it);
-        progress.setLabelText(label);
+        progress.setLabelText("Indexing " + (*it));
+        QString title;
+        title.sprintf("Indexing... (%d/%d)", it-list.begin(), list.count());
+        progress.setWindowTitle(title);
+
+        // Stop when user presses break
         if (progress.wasCanceled())
                 break;
+
         // Do not reindex indexed file
         if (!fileList.contains(*it))
         {
