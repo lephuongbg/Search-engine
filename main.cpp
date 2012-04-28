@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <unordered_set>
 #include "indexer.h"
 
 using namespace std;

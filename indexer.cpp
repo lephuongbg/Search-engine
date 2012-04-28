@@ -230,7 +230,7 @@ void Indexer::execute()
 vector<Document> Indexer::result()
 {
     // Sort result by score before return it out
-    // sort(result_.begin(), result_.end(), Document::docFreqComp);
+    sort(result_.begin(), result_.end(), Document::docFreqComp);
     return result_;
 }
 
@@ -320,19 +320,13 @@ bool Indexer::isIgnore(const string &keyword)
 // REMOVE UNNECESSARY CHARACTER FROM KEYWORD
 bool Indexer::isGarbage(char c)
 {
-    return c == '(' || c == ')' || c == '/';
+    return !( (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || (c >='A' && c <= 'Z'));
 }
 
 void Indexer::filter(string &keyword)
 {
     // Remove all characters defined in isGarbage method
     keyword.resize(std::remove_if(keyword.begin(), keyword.end(), isGarbage) - keyword.begin());
-
-    // Remove comma and punctuation at the end of the word
-    if (keyword.size() != 0 && keyword.rfind(',') == keyword.length() - 1)
-        keyword.erase(keyword.end()-1);
-    if (keyword.size() != 0 && keyword.rfind('.') == keyword.length() - 1)
-        keyword.erase(keyword.end()-1);
 }
 
 // RETRIEVE STOP WORDS FROM FILE
