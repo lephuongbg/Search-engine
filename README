@@ -7,14 +7,14 @@ CLI-only version:
         g++
         glibcxx
     + Compilation:
-        g++ -Wall *.cpp -o search-engine
+        g++ -Wall -O3 *.cpp -o search-engine
     + Run:
         ./search-engine
 GUI version:
     + Prerequisite: (can be easily installed with qt4-dev-tools package on ubuntu)
         g++
         glibcxx
-        qmake
+        cmake
         libqt4-dev
     + Compilation:
         mkdir build && cd build
