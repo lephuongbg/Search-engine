@@ -355,22 +355,9 @@ vector<Document> Indexer::operator[](const string &keyword)
 // IGNORE CERTAIN WORDS
 bool Indexer::isIgnore(const string &keyword)
 {
+    // If the keyword has zero-length size, ignore its
     if (keyword.size() == 0)
         return true;
-    switch (keyword.at(0))
-    {
-    // Ignore SGML tags
-    case '<':
-        return true;
-    // Ignore punctuation, comma
-    case ',':
-    case '.':
-        if (keyword.size() == 1)
-            return true;
-        break;
-    default:
-        break;
-    }
 
     // If the keyword exists in stop words list, also ignore it
     if (stopwords_.find(keyword) != stopwords_.end())
@@ -381,7 +368,7 @@ bool Indexer::isIgnore(const string &keyword)
 // REMOVE UNNECESSARY CHARACTER FROM KEYWORD
 bool Indexer::isGarbage(char c)
 {
-    return c == '(' || c == ')' || c == '/';
+    return !( (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || (c >= 'A' && c <= '9') );
 }
 
 void Indexer::filter(string &keyword)
@@ -389,11 +376,8 @@ void Indexer::filter(string &keyword)
     // Remove all characters defined in isGarbage method
     keyword.resize(std::remove_if(keyword.begin(), keyword.end(), isGarbage) - keyword.begin());
 
-    // Remove comma and punctuation at the end of the word
-    if (keyword.size() != 0 && keyword.rfind(',') == keyword.length() - 1)
-        keyword.erase(keyword.end()-1);
-    if (keyword.size() != 0 && keyword.rfind('.') == keyword.length() - 1)
-        keyword.erase(keyword.end()-1);
+    // Transform all characters to lower case
+    std::transform(keyword.begin(), keyword.end(), keyword.begin(), ::tolower);
 }
 
 // RETRIEVE STOP WORDS FROM FILE
