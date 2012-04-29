@@ -18,7 +18,7 @@ public:
     static INode * reBalance(INode * node);
     void setQuery(const string &query);
     void execute();
-    void addDocument(const string &docname);
+    bool addDocument(const string &docname);
     bool isIgnore(const string &keyword);
     static bool isGarbage(char c);
     static void filter (string &keyword);

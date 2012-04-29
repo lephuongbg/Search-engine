@@ -59,7 +59,7 @@ private:
     bool stopWordsAsked;
     void getStopWords();
     void index(QStringList list);
-    void indexIndividual(const QString &filename);
+    bool indexIndividual(const QString &filename);
     void updateWordList(INode * list);
     void updateStatusBar();
 };

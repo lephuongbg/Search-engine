@@ -25,7 +25,8 @@ OTHER_FILES += \
     folder-new.png \
     window-close.png \
     view-refresh.png \
-    view-list-details-symbolic.png
+    view-list-details-symbolic.png \
+    CMakeLists.txt
 
 FORMS += \
     mainwindow.ui

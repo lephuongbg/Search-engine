@@ -100,7 +100,6 @@ void MainWindow::index(QStringList list)
     {
         // Announce progress
         progress.setValue(it-list.begin());
-        progress.setLabelText("Indexing " + (*it));
         QString title;
         title.sprintf("Indexing... (%d/%d)", it-list.begin(), list.count());
         progress.setWindowTitle(title);
@@ -110,24 +109,24 @@ void MainWindow::index(QStringList list)
                 break;
 
         // Now index each file
-        indexIndividual(*it);
+        if (!fileList.contains(*it))
+        {
+            if (indexer->addDocument((*it).toStdString()))
+            {
+                fileList.append(*it);
+                progress.setLabelText("Indexed " + (*it) + ".");
+            }
+            else
+            {
+                progress.setLabelText("Ignored " + (*it) + ".");
+            }
+        }
     }
     qDebug() << "Indexing time: " << timer.elapsed() / 1000.0 << "s";
     progress.setValue(list.count());
     emit updatedList(fileList);
     updateWordList(this->indexer->indexer());
     emit updatedWordList();
-}
-
-void MainWindow::indexIndividual(const QString &filename)
-{
-    // Do not reindex indexed file
-    if (!fileList.contains(filename))
-    {
-        indexer->addDocument(filename.toStdString());
-        fileList.append(filename);
-        qDebug() << "Indexed" << filename;
-    }
 }
 
 // UPDATE THE LIST OF ALL INDEXED WORDS
@@ -237,12 +236,9 @@ void MainWindow::on_actionClear_triggered()
     ui->byName->setEnabled(false);
     ui->byRelevant->setEnabled(false);
 
-    // Clear indexer
+    // Renew indexer
     delete indexer;
     indexer = new Indexer;
-
-    // Reset stopWordsAsked bool value
-    stopWordsAsked = false;
 }
 
 // EXECUTE THE QUERY FROM QUERY BOX

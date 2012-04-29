@@ -86,12 +86,10 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    // Start timer
-    time_t start = clock();
     // Index all documents from command line args
+    time_t start = clock();
     for (it = args.begin(); it != args.end(); it++)
     {
-        cout << "Indexing " << *it << "...\n";
         I.addDocument(*it);
     }
     cout << "Complete in " << (float) (clock() - start)/CLOCKS_PER_SEC << " second(s).\n";
