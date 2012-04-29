@@ -5,6 +5,8 @@
 
 using namespace std;
 
+void showHelp();
+
 int main(int argc, char *argv[])
 {
     Indexer I;
@@ -15,7 +17,7 @@ int main(int argc, char *argv[])
         args.insert(args.end(), string(argv[i]));
     vector<string>::iterator it;
 
-    // If using stop words list:
+    // If user specifies stop words list:
     for (it = args.begin(); it != args.end() && *it != "--stop-words-file"; it++);
     if (it != args.end())
     {
@@ -26,6 +28,22 @@ int main(int argc, char *argv[])
         // Consume argument
         args.erase(it);
     }
+    // else, load default stopwords file
+    else
+    {
+        I.indexStopWords("stopwords");
+    }
+
+    // If user needs help there's no file name to index, display help then exit
+    for (it = args.begin(); it != args.end() && *it != "--help"; it++);
+    if (it != args.end() || args.empty())
+    {
+        // Display help
+        showHelp();
+        // Exit
+        return 0;
+    }
+
 
     // Index all documents from command line args
     time_t start = clock();
@@ -52,4 +70,20 @@ int main(int argc, char *argv[])
         }
     }
     return 0;
+}
+
+void showHelp()
+{
+    cout << "CLI Manual (can apply for GUI version):\n"
+         << "Running:\n"
+         << "    search-engine [--option [<argument>]] <files_to_index>\n"
+         << "Provide all file names as commandline arguments for the program\n\n"
+         << "Program's option:\n"
+         << "--stop-words-file <path/to/file>\n"
+         << "    specify stop words list file. Default file: \"./stopwords\"\n"
+         << "--no-gui (for GUI version)\n"
+         << "    run without GUI\n"
+         << "--help"
+         << "    show this manual\n";
+
 }
