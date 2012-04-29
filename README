@@ -14,11 +14,11 @@ GUI version:
     + Prerequisite: (can be easily installed with qt4-dev-tools package on ubuntu)
         g++
         glibcxx
-        qmake
+        cmake
         libqt4-dev
     + Compilation:
         mkdir build && cd build
-        qmake ../search-engine.pro
+        cmake ..
         make
     + Run
         ./search-engine (in build directory)
