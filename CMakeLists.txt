@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.4)
 PROJECT(search-engine)
 FIND_PACKAGE(Qt4 REQUIRED)
 
+SET(CMAKE_BUILD_TYPE release)
 SET(search-engine_SOURCES main.cpp indexer.cpp inode.cpp inodedata.cpp document.cpp slistview.cpp mainwindow.cpp)
 SET(search-engine_HEADERS  slistview.h mainwindow.h)
 SET(search-engine_FORMS mainwindow.ui)
