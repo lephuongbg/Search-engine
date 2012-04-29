@@ -55,7 +55,6 @@ int main(int argc, char *argv[])
     time_t start = clock();
     for (it = args.begin(); it != args.end(); it++)
     {
-        cout << "Indexing " << *it << "...\n";
         I.addDocument(*it);
     }
     cout << "Complete in " << (float) (clock() - start)/CLOCKS_PER_SEC << " second(s).\n";

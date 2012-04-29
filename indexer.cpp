@@ -327,7 +327,7 @@ vector<Document> Indexer::result()
 }
 
 // INDEX A DOCUMENT
-void Indexer::addDocument(const string &docname)
+bool Indexer::addDocument(const string &docname)
 {
     // Open document
     ifstream docfile;
@@ -359,9 +359,17 @@ void Indexer::addDocument(const string &docname)
                 this->insertKey(keyword);
                 this->at(keyword)->data()->docs(doc);
             }
+            std::cout << "Indexed " + docname + ".\n";
+        }
+        else
+        {
+            std::cout << "Ignored " + docname + ".\n";
+            return false; // Indicate the file is not read
         }
     }
     docfile.close();
+
+    return true; // Indicate successfully reading
 }
 
 // OVERLOADING OPERATOR [] FOR FAST ACCESS NODE VALUE BY KEY WORD
