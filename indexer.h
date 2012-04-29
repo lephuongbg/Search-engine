@@ -12,7 +12,7 @@ protected:
     set<string> stopwords_;
     stack<string> query_;
     vector<Document> result_;
-    enum {SYNTAX_ERROR, STOPWORD_WARNING, SUCCESS} status_;
+    enum Status {SYNTAX_ERROR, STOPWORD_WARNING, SUCCESS} status_;
 
 public:
     Indexer();

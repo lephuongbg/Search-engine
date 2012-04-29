@@ -162,7 +162,7 @@ void Indexer::setQuery(const string &query)
         	
         	if (isIgnore(buffer))  // If buffer store a stopword
         	{
-        		this->status_ = WARNING_STOPWORD;
+                this->status_ = STOPWORD_WARNING;
         		if (! this->query_.empty() && this->query_.top() == "AND")  // replace preceding operator with OR
         		{
     				this->query_.pop();
@@ -186,7 +186,7 @@ void Indexer::setQuery(const string &query)
         
 	if (error)  // If error flag was raised
 	{
-		this->status_ = ERROR_SYNTAX;  // change the status code
+        this->status_ = SYNTAX_ERROR;  // change the status code
 		while (! this->query_.empty()) this->query_.pop();  // fllush out the query stack
 		while (! this->result_.empty()) this->result_.pop_back();  // and fllush out the result
 	}
@@ -200,53 +200,75 @@ void Indexer::execute()
     vector<Document> d1, d2;
     string buffer;
     
-    while (! this->query_.empty())  // Parse through the query stack
+    // Parse through the query stack
+    while (! this->query_.empty())
     {
-        buffer = this->query_.top();  // Cache the top element
+        // Cache the top element
+        buffer = this->query_.top();
         this->query_.pop();
-        if (buffer == "AND")  // If buffer contain operator AND - highest priority
+
+        // If buffer contain operator AND - highest priority
+        if (buffer == "AND")
         {
-        	s_operator.push(buffer);  // push it into operator stack right away
+            // push it into operator stack right away
+            s_operator.push(buffer);
         }
-        else if (buffer == "OR")  // else, it is operator OR
+        // else, it is operator OR
+        else if (buffer == "OR")
         {        	
-            while (! s_operator.empty() && s_operator.top() == "AND")  // if last operator has higher priority (AND operator)
+            // loop while last operator has higher priority (AND operator)
+            while (! s_operator.empty() && s_operator.top() == "AND")
             {
-                s_operator.pop();  // we pop the AND operator out
+                // we pop the AND operator out
+                s_operator.pop();
                 
                 d1 = s_operand.top();
                 s_operand.pop();
                 d2 = s_operand.top();
                 s_operand.pop();
                 
-                result_ = Document::conjunct(d1, d2);  // and do the math
-                s_operand.push(result_);  // push the result into the operand stack as a normal operand
-            }  // do this loop again in case there are more AND operator preceding
-            s_operator.push(buffer);  // push OR into operator stack
+                // and do the math
+                result_ = Document::conjunct(d1, d2);
+                // push the result into the operand stack as a normal operand
+                s_operand.push(result_);
+            }
+            // push OR into operator stack
+            s_operator.push(buffer);
         }
-        else  // else, it is an operand
+        // else, it is an operand
+        else
         {
-        	if (buffer.find("*") != string::npos)  // If the keyword is a wildcard
-        		s_operand.push(Indexer::match(this->indexer_, buffer));  // push the wildcard filter result into operand stack
-        	else  // otherwise,
-            	s_operand.push((*this)[buffer]);  // just push it into operand stack for later process
+            // If the keyword is a wildcard
+            if (buffer.find("*") != string::npos)
+                // push the wildcard filter result into operand stack
+                s_operand.push(Indexer::match(this->indexer_, buffer));
+            // otherwise,
+            else
+                // just push it into operand stack for later process
+                s_operand.push((*this)[buffer]);
         }
     }
     
-    while (! s_operator.empty())  // Parse through operator stack
+    // Parse through operator stack
+    while (!s_operator.empty())
     {
-        if (s_operator.top() == "AND")  // If the operator is AND
+        // If the operator is AND
+        if (s_operator.top() == "AND")
         {
-            s_operator.pop();  // take out the 2 next operands in operand stack
+            // take out the 2 next operands in operand stack
+            s_operator.pop();
             d1 = s_operand.top();
             s_operand.pop();
             d2 = s_operand.top();
             s_operand.pop();
             
-            result_ = Document::conjunct(d1, d2);  // do the conjunct operation
-            s_operand.push(result_);  // and then push the result back into operand stack
+            // do the conjunct operation
+            result_ = Document::conjunct(d1, d2);
+            // and then push the result back into operand stack
+            s_operand.push(result_);
         }
-        else  // otherwise
+        // otherwise
+        else
         {
             s_operator.pop();
             d1 = s_operand.top();
@@ -254,19 +276,22 @@ void Indexer::execute()
             d2 = s_operand.top();
             s_operand.pop();
             
-            result_ = Document::disjunct(d1, d2);  // do the disjunct operation
-            s_operand.push(result_);  // and then push the result back into operand stack
+            // do the disjunct operation
+            result_ = Document::disjunct(d1, d2);
+            // and then push the result back into operand stack
+            s_operand.push(result_);
         }
     }
 	
-	if (! s_operand.empty())
-    	result_ = s_operand.top();  // The last result is the last element left in operand stack
+    // The last result is the last element left in operand stack
+    if (!s_operand.empty())
+        result_ = s_operand.top();
 }
 
 vector<Document> Indexer::result()
 {
     // Sort result by score before return it out
-    // sort(result_.begin(), result_.end(), Document::docFreqComp);
+    sort(result_.begin(), result_.end(), Document::docFreqComp);
     return result_;
 }
 
