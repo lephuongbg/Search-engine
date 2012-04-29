@@ -69,7 +69,7 @@ INodeData * INode::data()
  *************************************/
 void INode::fixStats()
 {
-    height_ = max(getHeight(left_), getHeight(this->right_)) + 1;
+    height_ = max(getHeight(left_), getHeight(right_)) + 1;
 }
 
 /**************************************************************
