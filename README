@@ -1,1 +1,24 @@
-//TODO: WRITING CONTENT HERE
+SEARCH ENGINE PROJECT
+
+A small program for demonstration purpose. It indexes texts from files and provide way for the users to search through those indexed files.
+
+CLI-only version:
+    + Prerequisite: (satisfied on almost any linux systems)
+        g++
+        glibcxx
+    + Compilation:
+        g++ -Wall *.cpp -o search-engine
+    + Run:
+        ./search-engine
+GUI version:
+    + Prerequisite: (can be easily installed with qt4-dev-tools package on ubuntu)
+        g++
+        glibcxx
+        qmake
+        libqt4-dev
+    + Compilation:
+        mkdir build && cd build
+        qmake ../search-engine.pro
+        make
+    + Run
+        ./search-engine (in build directory)

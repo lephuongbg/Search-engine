@@ -12,6 +12,7 @@ protected:
     set<string> stopwords_;
     stack<string> query_;
     vector<Document> result_;
+    enum Status {SYNTAX_ERROR, STOPWORD_WARNING, SUCCESS} status_;
 
 public:
     Indexer();
@@ -32,6 +33,10 @@ public:
     // For debugging
     static void traverse(INode * node);
     INode * indexer();
+    
+    Status status();
+    static vector<Document> match(INode * node, string regex);
+    static vector<Document> match(INode * node, vector<string> q_regex);
 };
 
 #endif // INDEXER_H
