@@ -17,6 +17,16 @@ int main(int argc, char *argv[])
         args.insert(args.end(), string(argv[i]));
     vector<string>::iterator it;
 
+    // If user needs help, display help then exit
+    for (it = args.begin(); it != args.end() && *it != "--help"; it++);
+    if (it != args.end())
+    {
+        // Display help
+        showHelp();
+        // Exit
+        return 0;
+    }
+
     // If user specifies stop words list:
     for (it = args.begin(); it != args.end() && *it != "--stop-words-file"; it++);
     if (it != args.end())
@@ -34,16 +44,12 @@ int main(int argc, char *argv[])
         I.indexStopWords("stopwords");
     }
 
-    // If user needs help there's no file name to index, display help then exit
-    for (it = args.begin(); it != args.end() && *it != "--help"; it++);
-    if (it != args.end() || args.empty())
+    // If there's no file to index, display help then exit
+    if (args.size() == 0)
     {
-        // Display help
         showHelp();
-        // Exit
         return 0;
     }
-
 
     // Index all documents from command line args
     time_t start = clock();
