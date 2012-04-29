@@ -445,6 +445,11 @@ INode *Indexer::indexer()
     return indexer_;
 }
 
+Indexer::Status Indexer::status()
+{
+    return status_;
+}
+
 // HANDLE THE REGEX STRING TO TURN IT INTO A SPECIFIC PATTERN OBJECT. MAKE THE TASK MORE COMFORTABLE.
 vector<Document> Indexer::match(INode *node, string regex)
 {

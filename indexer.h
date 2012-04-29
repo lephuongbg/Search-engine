@@ -7,17 +7,11 @@
 
 class Indexer
 {
-protected:
-    INode * indexer_;
-    set<string> stopwords_;
-    stack<string> query_;
-    vector<Document> result_;
-    enum Status {SYNTAX_ERROR, STOPWORD_WARNING, SUCCESS} status_;
-
 public:
     Indexer();
     ~Indexer();
 
+    enum Status {SYNTAX_ERROR, STOPWORD_WARNING, SUCCESS};
     // Functional methods
     void insertKey(const string & keyword);
     static INode * insertKey(INode * node, const string & keyword);
@@ -39,6 +33,13 @@ public:
     Status status();
     // Debug methods
     static void traverse(INode * node);
+
+protected:
+    INode * indexer_;
+    set<string> stopwords_;
+    stack<string> query_;
+    vector<Document> result_;
+    Status status_;
 };
 
 #endif // INDEXER_H
