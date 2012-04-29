@@ -5,14 +5,14 @@
  ************************************/
 Document::Document()
 {
-    this->name_ = "";
-    this->occurrence_ = 1;
+    name_ = "";
+    occurrence_ = 1;
 }
 
 Document::Document(const string &docname)
 {
-    this->name_ = docname;
-    this->occurrence_ = 1;
+    name_ = docname;
+    occurrence_ = 1;
 }
 
 /************************************
@@ -28,7 +28,7 @@ string Document::name()
  ************************************/
 void Document::name(const string &docname)
 {
-    this->name_ = docname;
+    name_ = docname;
 }
 
 /***************************************************
@@ -36,7 +36,7 @@ void Document::name(const string &docname)
  ***************************************************/
 int Document::occurrence()
 {
-    return this->occurrence_;
+    return occurrence_;
 }
 
 /***************************************************
@@ -44,12 +44,12 @@ int Document::occurrence()
  ***************************************************/
 void Document::occurrence(int occurrence)
 {
-    this->occurrence_ = occurrence;
+    occurrence_ = occurrence;
 }
 
 void Document::increaseOccurrence(int n)
 {
-    this->occurrence_ += n;
+    occurrence_ += n;
 }
 
 /*****************************************************

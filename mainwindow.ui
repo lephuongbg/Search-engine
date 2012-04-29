@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>506</width>
-    <height>394</height>
+    <height>416</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -287,6 +287,23 @@
    <addaction name="actionClear"/>
    <addaction name="actionClose"/>
    <addaction name="separator"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16</height>
+    </size>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::DefaultContextMenu</enum>
+   </property>
   </widget>
   <action name="actionAddFiles">
    <property name="icon">

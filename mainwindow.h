@@ -61,6 +61,7 @@ private:
     void index(QStringList list);
     void indexIndividual(const QString &filename);
     void updateWordList(INode * list);
+    void updateStatusBar();
 };
 
 #endif // MAINWINDOW_H

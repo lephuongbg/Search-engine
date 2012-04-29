@@ -8,6 +8,8 @@
 
 using namespace std;
 
+void showHelp();
+
 int main(int argc, char *argv[])
 {
     // Store command line arguments
@@ -15,6 +17,16 @@ int main(int argc, char *argv[])
     for (int i = 1; i < argc; i++)
         args.insert(args.end(), string(argv[i]));
     vector<string>::iterator it;
+
+    // If user needs help, display help then exit
+    for (it = args.begin(); it != args.end() && *it != "--help"; it++);
+    if (it != args.end())
+    {
+        // Display help
+        showHelp();
+        // Exit
+        return 0;
+    }
 
     // Check for no gui option
     for (it = args.begin(); it != args.end() && *it != "--no-gui"; it++);
@@ -24,6 +36,7 @@ int main(int argc, char *argv[])
     {   
         QApplication a(argc, argv);
         MainWindow w;
+        // If user specifies stop words file
         for (it = args.begin(); it != args.end() && *it != "--stop-words-file"; it++);
         if (it != args.end())
         {
@@ -33,6 +46,11 @@ int main(int argc, char *argv[])
             w.indexStopWordsFile(*it);
             // Consume argument
             args.erase(it);
+        }
+        // else, load default file
+        else
+        {
+            w.indexStopWordsFile("stopwords");
         }
         w.addDocuments(args);
 
@@ -44,7 +62,7 @@ int main(int argc, char *argv[])
     // Continue the program without gui
     Indexer I;
 
-    // If using stop words list:
+    // If user specifies stop words list:
     for (it = args.begin(); it != args.end() && *it != "--stop-words-file"; it++);
     if (it != args.end())
     {
@@ -54,6 +72,18 @@ int main(int argc, char *argv[])
         I.indexStopWords(*it);
         // Consume argument
         args.erase(it);
+    }
+    // else, load default stopwords file
+    else
+    {
+        I.indexStopWords("stopwords");
+    }
+
+    // If there's no file to index, display help then exit
+    if (args.size() == 0)
+    {
+        showHelp();
+        return 0;
     }
 
     // Start timer
@@ -82,4 +112,20 @@ int main(int argc, char *argv[])
         }
     }
     return 0;
+}
+
+void showHelp()
+{
+    cout << "CLI Manual (can apply for GUI version):\n"
+         << "Running:\n"
+         << "    search-engine [--option [<argument>]] <files_to_index>\n"
+         << "Provide all file names as commandline arguments for the program\n\n"
+         << "Program's option:\n"
+         << "--stop-words-file <path/to/file>\n"
+         << "    specify stop words list file. Default file: \"./stopwords\"\n"
+         << "--no-gui (for GUI version)\n"
+         << "    run without GUI\n"
+         << "--help"
+         << "    show this manual\n";
+
 }

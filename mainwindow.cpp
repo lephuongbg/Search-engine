@@ -143,6 +143,24 @@ void MainWindow::updateWordList(INode *list)
     }
 }
 
+void MainWindow::updateStatusBar()
+{
+    switch (indexer->status())
+    {
+    case Indexer::SUCCESS:
+        statusBar()->showMessage("Query successful!");
+        break;
+    case Indexer::STOPWORD_WARNING:
+        statusBar()->showMessage("Query successful with stop words elimination!");
+        break;
+    case Indexer::SYNTAX_ERROR:
+        statusBar()->showMessage("Syntax error!");
+        break;
+    default:
+        break;
+    }
+}
+
 // ADD STOP WORDS LIST TO THE INDEXER
 void MainWindow::getStopWords()
 {
@@ -252,6 +270,9 @@ void MainWindow::on_filterButton_clicked()
     for (vector<Document>::iterator it = rankSortedResult.begin(); it != rankSortedResult.end(); it++)
         resultList.append(QString::fromStdString(it->name()));
     emit updatedList(resultList);
+
+    // Update status
+    updateStatusBar();
 
     // Enable sort options
     ui->byName->setEnabled(true);

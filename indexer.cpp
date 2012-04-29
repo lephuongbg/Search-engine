@@ -135,60 +135,91 @@ void Indexer::setQuery(const string &query)
     bool operatorPhase = false;  // A flag to determine an unit should be operator or operand in a specific phase. Operand phase always come first
     bool error = false;  // A flag to determine that if the input query has error or not
     
-    while (! this->query_.empty()) this->query_.pop();  // Fllush out the last query
-    this->status_ = SUCCESS;  // Change error code to default SUCCESS value
+    // Flush out the last query
+    while (!query_.empty())
+        query_.pop();
+    // Change status code to default SUCCESS value
+    status_ = SUCCESS;
     
-    while (! strm.eof())  // Parse through the string stream
+    // Parse through the string stream
+    while (!strm.eof())
     {
-        strm >> buffer;  // Flow into buffer memory
+        // Flow into buffer memory
+        strm >> buffer;
         
-        if (buffer == "AND" || buffer == "OR")  // If a operator is stored in buffer memory
+        // If a operator is stored in buffer memory
+        if (buffer == "AND" || buffer == "OR")
         {
-            if (operatorPhase)  // and we are in operator phase
+            // and we are in operator phase
+            if (operatorPhase)
         	{
-		        this->query_.push(buffer);  // everything is normal and we just push buffer into query stack
-		        operatorPhase = false;  // turn the flag to indicate that this phase is ended
+                // everything is normal and we just push buffer into query stack
+                query_.push(buffer);
+                // turn the flag to indicate that this phase is ended
+                operatorPhase = false;
 			}
-			else  // otherwise, we have some user error in query string
+            // otherwise, we have some user error in query string
+            else
 			{
-				error = true;  // turn the flag
-				break;  // and break the whole process
+                // turn the flag
+                error = true;
+                // and break the whole process
+                break;
 			}
         }
-        else  // If a keyword is stored in buffer memory
+        // If a keyword is stored in buffer memory
+        else
         {
-        	if (operatorPhase)  // and we are in operator phase
-        		this->query_.push("AND");  // automatically push in the AND operator and then the key word. Eg: net work ->> net AND work
+            // and we are in operator phase
+            if (operatorPhase)
+                // automatically push in the AND operator and then the key word. Eg: net work ->> net AND work
+                query_.push("AND");
         	
-        	if (isIgnore(buffer))  // If buffer store a stopword
+            // If buffer store a stopword
+            if (isIgnore(buffer))
         	{
-                this->status_ = STOPWORD_WARNING;
-        		if (! this->query_.empty() && this->query_.top() == "AND")  // replace preceding operator with OR
+                status_ = STOPWORD_WARNING;
+                if (!query_.empty() && query_.top() == "AND")
         		{
-    				this->query_.pop();
-    				this->query_.push("OR");
+                    // replace preceding operator with OR
+                    query_.pop();
+                    query_.push("OR");
         		}
         		
-        		this->query_.push(buffer);  // push in the stop word
-    			this->query_.push("OR");  // push OR right after it
-    			strm >> buffer;  // ignore the next operator
+                // push in the stop word
+                query_.push(buffer);
+                // push OR right after it
+                query_.push("OR");
+                // ignore the next operator
+                strm >> buffer;
         	}
-        	else  // otherwise, just a normal keyword
+            // otherwise, just a normal keyword
+            else
         	{
-	        	this->query_.push(buffer);  // push it right into query stack
-	        	operatorPhase = true;  // turn the flag to indicate that this phase is ended
+                // push it right into query stack
+                query_.push(buffer);
+                // turn the flag to indicate that this phase is ended
+                operatorPhase = true;
 	        }
         }           
     }
     
-    if (! operatorPhase)  // If operator at the end of query stack
-        error = true;  // raise the error flag
+    // If operator at the end of query stack
+    if (! operatorPhase)
+        // raise the error flag
+        error = true;
         
-	if (error)  // If error flag was raised
+    // If error flag was raised
+    if (error)
 	{
-        this->status_ = SYNTAX_ERROR;  // change the status code
-		while (! this->query_.empty()) this->query_.pop();  // fllush out the query stack
-		while (! this->result_.empty()) this->result_.pop_back();  // and fllush out the result
+        // change the status code
+        status_ = SYNTAX_ERROR;
+        // flush out the query stack
+        while (!query_.empty())
+            query_.pop();
+        // and flush out the result
+        while (!result_.empty())
+            result_.pop_back();
 	}
 }
 
@@ -201,11 +232,11 @@ void Indexer::execute()
     string buffer;
     
     // Parse through the query stack
-    while (! this->query_.empty())
+    while (!query_.empty())
     {
         // Cache the top element
-        buffer = this->query_.top();
-        this->query_.pop();
+        buffer = query_.top();
+        query_.pop();
 
         // If buffer contain operator AND - highest priority
         if (buffer == "AND")
@@ -241,7 +272,7 @@ void Indexer::execute()
             // If the keyword is a wildcard
             if (buffer.find("*") != string::npos)
                 // push the wildcard filter result into operand stack
-                s_operand.push(Indexer::match(this->indexer_, buffer));
+                s_operand.push(Indexer::match(indexer_, buffer));
             // otherwise,
             else
                 // just push it into operand stack for later process
@@ -355,7 +386,7 @@ vector<Document> Indexer::operator[](const string &keyword)
 // IGNORE CERTAIN WORDS
 bool Indexer::isIgnore(const string &keyword)
 {
-    // If the keyword has zero-length size, ignore its
+    // If the keyword has zero-length size, ignore it
     if (keyword.size() == 0)
         return true;
 
@@ -412,6 +443,11 @@ void Indexer::traverse(INode *node)
 INode *Indexer::indexer()
 {
     return indexer_;
+}
+
+Indexer::Status Indexer::status()
+{
+    return status_;
 }
 
 // HANDLE THE REGEX STRING TO TURN IT INTO A SPECIFIC PATTERN OBJECT. MAKE THE TASK MORE COMFORTABLE.

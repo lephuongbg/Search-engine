@@ -22,3 +22,17 @@ GUI version:
         make
     + Run
         ./search-engine (in build directory)
+
+CLI Manual (can apply for GUI version):
+Running:
+    search-engine [--option [<argument>]] <files_to_index>
+Provide all file names as commandline arguments for the program
+
+Program's option:
+--stop-words-file <path/to/file>
+    specify stop words list file. Default file: "./stopwords"
+--no-gui (for GUI version)
+    run without GUI
+--help
+    show this manual
+
