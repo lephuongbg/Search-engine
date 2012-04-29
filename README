@@ -7,7 +7,7 @@ CLI-only version:
         g++
         glibcxx
     + Compilation:
-        g++ -Wall *.cpp -o search-engine
+        g++ -Wall -O3 *.cpp -o search-engine
     + Run:
         ./search-engine
 GUI version:
