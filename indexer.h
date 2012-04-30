@@ -37,7 +37,7 @@ public:
 protected:
     INode * indexer_;
     set<string> stopwords_;
-    stack<string> query_;
+    vector<string> query_;
     vector<Document> result_;
     Status status_;
 };
