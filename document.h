@@ -22,6 +22,8 @@ public:
     static bool docFreqComp(Document doc1, Document doc2);
     static vector<Document> conjunct(vector<Document> docs1, vector<Document> docs2);
     static vector<Document> disjunct(vector<Document> docs1, vector<Document> docs2);
+
+friend class INodeData;
 };
 
 #endif // DOCUMENT_H

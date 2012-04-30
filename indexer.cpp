@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <cstring>
 
 // CONSTRUCTOR
 Indexer::Indexer()
@@ -19,32 +20,34 @@ Indexer::~Indexer()
 }
 
 // INSERT A KEYWORD INTO THE INDEXER
-void Indexer::insertKey(const string & keyword)
+void Indexer::insertKey(const string & keyword, Document & docname)
 {
-    indexer_ = insertKey(indexer_, keyword);
+    indexer_ = insertKey(indexer_, keyword, docname);
 }
 
-INode * Indexer::insertKey(INode * node, const string &keyword)
+INode * Indexer::insertKey(INode * node, const string &keyword, Document & docname)
 {
     //If the tree is empty, create a new node for it
     if (node == NULL)
     {
         INode * new_node = new INode(keyword);
+        new_node->data()->docs(docname);
         return new_node;
     }
     //If keyword is smaller than current node key, set it to the left
-    if (keyword < node->data()->word())
+    if (std::strcmp(keyword.c_str(), node->data()->word_.c_str()) < 0)
     {
-        node->setLeft(insertKey(node->left(), keyword));
+        node->setLeft(insertKey(node->left(), keyword, docname));
         return reBalance(node);
     }
     //If keyword is greater than current node key, set it to the right
-    else if (keyword > node->data()->word())
+    else if (std::strcmp(keyword.c_str(), node->data()->word_.c_str()) > 0)
     {
-        node->setRight(insertKey(node->right(), keyword));
+        node->setRight(insertKey(node->right(), keyword, docname));
         return reBalance(node);
     }
     //If keyword has already exist, return the node
+    node->data()->docs(docname);
     return node;
 }
 
@@ -129,194 +132,171 @@ INode *Indexer::at(const string &keyword)
 // SET A QUERY INTO THE INDEXER
 void Indexer::setQuery(const string &query)
 {
+	// Flush out the last query
+	query_.clear();
+	
     stringstream strm;
     strm.str(query);  // Init the string stream with the query string
-    string buffer;
-    bool operatorPhase = false;  // A flag to determine an unit should be operator or operand in a specific phase. Operand phase always come first
-    bool error = false;  // A flag to determine that if the input query has error or not
+    string temp;
+	unsigned int i = 0;
     
-    // Flush out the last query
-    while (!query_.empty())
-        query_.pop();
     // Change status code to default SUCCESS value
     status_ = SUCCESS;
     
     // Parse through the string stream
-    while (!strm.eof())
+    while (! strm.eof())
     {
-        // Flow into buffer memory
-        strm >> buffer;
-        
-        // If a operator is stored in buffer memory
-        if (buffer == "AND" || buffer == "OR")
-        {
-            // and we are in operator phase
-            if (operatorPhase)
-        	{
-                // everything is normal and we just push buffer into query stack
-                query_.push(buffer);
-                // turn the flag to indicate that this phase is ended
-                operatorPhase = false;
-			}
-            // otherwise, we have some user error in query string
-            else
-			{
-                // turn the flag
-                error = true;
-                // and break the whole process
-                break;
-			}
-        }
-        // If a keyword is stored in buffer memory
-        else
-        {
-            // and we are in operator phase
-            if (operatorPhase)
-                // automatically push in the AND operator and then the key word. Eg: net work ->> net AND work
-                query_.push("AND");
-        	
-            // If buffer store a stopword
-            if (isIgnore(buffer))
-        	{
-                status_ = STOPWORD_WARNING;
-                if (!query_.empty() && query_.top() == "AND")
-        		{
-                    // replace preceding operator with OR
-                    query_.pop();
-                    query_.push("OR");
-        		}
-        		
-                // push in the stop word
-                query_.push(buffer);
-                // push OR right after it
-                query_.push("OR");
-                // ignore the next operator
-                strm >> buffer;
-        	}
-            // otherwise, just a normal keyword
-            else
-        	{
-                // push it right into query stack
-                query_.push(buffer);
-                // turn the flag to indicate that this phase is ended
-                operatorPhase = true;
-	        }
-        }           
+    	strm >> temp;  // flow it into buffer memory
+    	query_.push_back(temp);
+    	if (i % 2 == 0 && (query_.at(i) == "AND" || query_.at(i) == "OR"))  // if it is not operand as it should be
+    	{
+			status_ = SYNTAX_ERROR;  // raise an error
+			break;  // break the process
+		}
+		else if (i % 2 == 1 && (query_.at(i) != "AND" && query_.at(i) != "OR"))  // if it is not operator as it should be
+		{
+			query_.push_back(query_.at(i));
+			query_.at(i++) = "AND";
+		}
+		i++;
     }
     
-    // If operator at the end of query stack
-    if (! operatorPhase)
-        // raise the error flag
-        error = true;
-        
-    // If error flag was raised
-    if (error)
+    if (i % 2 == 0)  // If the last unit is an operand
 	{
-        // change the status code
-        status_ = SYNTAX_ERROR;
-        // flush out the query stack
-        while (!query_.empty())
-            query_.pop();
-        // and flush out the result
-        while (!result_.empty())
-            result_.pop_back();
-	}
+    	status_ = SYNTAX_ERROR;  // raise an error
+    	return;
+    }
+    
+    for (i = 0; i < query_.size(); i++)
+    {
+        if (!filter(query_.at(i)))
+    	{
+    		status_ = STOPWORD_WARNING;  // raise an warning
+    		if (query_.size() == 1)
+    		{
+    			query_.erase(query_.begin());
+    		}
+    		else if (i == 0)
+    		{
+    			query_.erase(query_.begin());
+    			query_.erase(query_.begin());
+    		}
+    		else if (i == query_.size() - 1)
+    		{
+    			query_.pop_back();
+    			query_.pop_back();
+    		}
+    		else
+    		{
+    			query_.erase(query_.begin() + i);
+    			if (query_.at(i-1) == "AND" && query_.at(i) == "OR")
+    				query_.erase(query_.begin() + i - 1);
+    			else
+    				query_.erase(query_.begin() + i);
+    		}
+    	}
+    }
 }
 
 // EXECUTE THE QUERY
 void Indexer::execute()
 {
-    stack<string> s_operator;  // A stack used to store operator(s)
-    stack< vector<Document> > s_operand;  // A stack used to store operand(s)
-    vector<Document> d1, d2;
-    string buffer;
-    
-    // Parse through the query stack
-    while (!query_.empty())
-    {
-        // Cache the top element
-        buffer = query_.top();
-        query_.pop();
+	if (status_ != SYNTAX_ERROR && query_.size() > 0)
+	{
+		stack<string> s_operator;  // A stack used to store operator(s)
+		stack< vector<Document> > s_operand;  // A stack used to store operand(s)
+		vector<Document> d1, d2;
+		string buffer;
+		
+		// Parse through the query stack
+		while (query_.size() > 0)
+		{
+		    // Cache the top element
+		    buffer = query_.back();
+		    query_.pop_back();
 
-        // If buffer contain operator AND - highest priority
-        if (buffer == "AND")
-        {
-            // push it into operator stack right away
-            s_operator.push(buffer);
-        }
-        // else, it is operator OR
-        else if (buffer == "OR")
-        {        	
-            // loop while last operator has higher priority (AND operator)
-            while (! s_operator.empty() && s_operator.top() == "AND")
-            {
-                // we pop the AND operator out
-                s_operator.pop();
-                
-                d1 = s_operand.top();
-                s_operand.pop();
-                d2 = s_operand.top();
-                s_operand.pop();
-                
-                // and do the math
-                result_ = Document::conjunct(d1, d2);
-                // push the result into the operand stack as a normal operand
-                s_operand.push(result_);
-            }
-            // push OR into operator stack
-            s_operator.push(buffer);
-        }
-        // else, it is an operand
-        else
-        {
-            // If the keyword is a wildcard
-            if (buffer.find("*") != string::npos)
-                // push the wildcard filter result into operand stack
-                s_operand.push(Indexer::match(indexer_, buffer));
-            // otherwise,
-            else
-                // just push it into operand stack for later process
-                s_operand.push((*this)[buffer]);
-        }
-    }
-    
-    // Parse through operator stack
-    while (!s_operator.empty())
-    {
-        // If the operator is AND
-        if (s_operator.top() == "AND")
-        {
-            // take out the 2 next operands in operand stack
-            s_operator.pop();
-            d1 = s_operand.top();
-            s_operand.pop();
-            d2 = s_operand.top();
-            s_operand.pop();
-            
-            // do the conjunct operation
-            result_ = Document::conjunct(d1, d2);
-            // and then push the result back into operand stack
-            s_operand.push(result_);
-        }
-        // otherwise
-        else
-        {
-            s_operator.pop();
-            d1 = s_operand.top();
-            s_operand.pop();
-            d2 = s_operand.top();
-            s_operand.pop();
-            
-            // do the disjunct operation
-            result_ = Document::disjunct(d1, d2);
-            // and then push the result back into operand stack
-            s_operand.push(result_);
-        }
-    }
+		    // If buffer contain operator AND - highest priority
+		    if (buffer == "AND")
+		    {
+		        // push it into operator stack right away
+		        s_operator.push(buffer);
+		    }
+		    // else, it is operator OR
+		    else if (buffer == "OR")
+		    {        	
+		        // loop while last operator has higher priority (AND operator)
+		        while (!s_operator.empty() && s_operator.top() == "AND")
+		        {
+		            // we pop the AND operator out
+		            s_operator.pop();
+		            
+		            d1 = s_operand.top();
+		            s_operand.pop();
+		            d2 = s_operand.top();
+		            s_operand.pop();
+		            
+		            // and do the math
+		            result_ = Document::conjunct(d1, d2);
+		            // push the result into the operand stack as a normal operand
+		            s_operand.push(result_);
+		        }
+		        // push OR into operator stack
+		        s_operator.push(buffer);
+		    }
+		    // else, it is an operand
+		    else
+		    {
+		        // If the keyword is a wildcard
+		        if (buffer.find("*") != string::npos)
+		            // push the wildcard filter result into operand stack
+		            s_operand.push(Indexer::match(indexer_, buffer));
+		        // otherwise,
+		        else
+		            // just push it into operand stack for later process
+		            s_operand.push((*this)[buffer]);
+		    }
+		}
+		
+		// Parse through operator stack
+		while (!s_operator.empty())
+		{
+		    // If the operator is AND
+		    if (s_operator.top() == "AND")
+		    {
+		        // take out the 2 next operands in operand stack
+		        s_operator.pop();
+		        d1 = s_operand.top();
+		        s_operand.pop();
+		        d2 = s_operand.top();
+		        s_operand.pop();
+		        
+		        // do the conjunct operation
+		        result_ = Document::conjunct(d1, d2);
+		        // and then push the result back into operand stack
+		        s_operand.push(result_);
+		    }
+		    // otherwise
+		    else
+		    {
+		        s_operator.pop();
+		        d1 = s_operand.top();
+		        s_operand.pop();
+		        d2 = s_operand.top();
+		        s_operand.pop();
+		        
+		        // do the disjunct operation
+		        result_ = Document::disjunct(d1, d2);
+		        // and then push the result back into operand stack
+		        s_operand.push(result_);
+		    }
+		}
 	
-    // The last result is the last element left in operand stack
-    if (!s_operand.empty())
-        result_ = s_operand.top();
+		// The last result is the last element left in operand stack
+		if (!s_operand.empty())
+		    result_ = s_operand.top();
+	}
+	else
+		result_.clear();
 }
 
 vector<Document> Indexer::result()
@@ -351,13 +331,9 @@ bool Indexer::addDocument(const string &docname)
             {
                 // Read each word one by one in the document
                 docfile >> keyword;
-                // Remove unnecessary character from keyword
-                filter(keyword);
-                // If keyword is insignificantly important, ignoreit
-                if (isIgnore(keyword))
-                    continue;
-                this->insertKey(keyword);
-                this->at(keyword)->data()->docs(doc);
+                // Filter the keyword and if it's still valid, we continue indexing
+                if (filter(keyword))
+                    this->insertKey(keyword, doc);
             }
             std::cout << "Indexed " + docname + ".\n";
         }
@@ -377,46 +353,34 @@ vector<Document> Indexer::operator[](const string &keyword)
 {
     vector<Document> result;
     INode * keynode = this->at(keyword);
-    // If the keyword doesn't exist, add it to the indexer
-    if (keynode == NULL)
-    {
-        this->insertKey(keyword);
-    }
-    // otherwise, return all documents containing it
-    else
+    // If the keyword exists, return all documents containing it
+    if (keynode != NULL)
     {
         result = keynode->data()->docs();
     }
 
+    // return empty result by default
     return result;
 }
 
-// IGNORE CERTAIN WORDS
-bool Indexer::isIgnore(const string &keyword)
-{
-    // If the keyword has zero-length size, ignore it
-    if (keyword.size() == 0)
-        return true;
-
-    // If the keyword exists in stop words list, also ignore it
-    if (stopwords_.find(keyword) != stopwords_.end())
-        return true;
-    return false;
-}
-
-// REMOVE UNNECESSARY CHARACTER FROM KEYWORD
+// REMOVE UNNECESSARY CHARACTER FROM THE KEYWORD AND CHECK ITS VALIDITY
 bool Indexer::isGarbage(char c)
 {
     return !( (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || (c >= 'A' && c <= '9') );
 }
 
-void Indexer::filter(string &keyword)
+bool Indexer::filter(string &keyword)
 {
     // Remove all characters defined in isGarbage method
     keyword.resize(std::remove_if(keyword.begin(), keyword.end(), isGarbage) - keyword.begin());
 
     // Transform all characters to lower case
     std::transform(keyword.begin(), keyword.end(), keyword.begin(), ::tolower);
+
+    if (keyword.size() == 0 || stopwords_.find(keyword) != stopwords_.end())
+        return false;
+
+    return true;
 }
 
 // RETRIEVE STOP WORDS FROM FILE
@@ -442,7 +406,7 @@ void Indexer::traverse(INode *node)
     if (node != NULL)
     {
         traverse(node->left());
-        std::cout << node->data()->word() << '\n';
+        std::cout << node->data()->word_ << '\n';
         traverse(node->right());
     }
 }

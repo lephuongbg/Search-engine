@@ -36,15 +36,14 @@ vector<Document> INodeData::docs()
  *****************************************/
 void INodeData::docs(Document doc)
 {
-    unsigned int i;
     //Check for existance of the document in the list
-    for (i = 0; i < docs_.size(); i++)
+    for (vector<Document>::iterator it = docs_.begin(); it != docs_.end(); it++)
     {
         //If yes,
-        if (docs_.at(i).name() == doc.name())
+        if (it->name_ == doc.name_)
         {
             //Increase the word occurrence counter for the document
-            docs_.at(i).increaseOccurrence(doc.occurrence());
+            it->occurrence_ += doc.occurrence_;
             return;
         }
     }
