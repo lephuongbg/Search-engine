@@ -13,15 +13,14 @@ public:
 
     enum Status {SYNTAX_ERROR, STOPWORD_WARNING, SUCCESS};
     // Functional methods
-    void insertKey(const string & keyword);
-    static INode * insertKey(INode * node, const string & keyword);
+    void insertKey(const string & keyword, Document &docname);
+    static INode * insertKey(INode * node, const string & keyword, Document &docname);
     static INode * reBalance(INode * node);
     void setQuery(const string &query);
     void execute();
     bool addDocument(const string &docname);
-    bool isIgnore(const string &keyword);
     static bool isGarbage(char c);
-    static void filter (string &keyword);
+    bool filter(string &keyword);
     void indexStopWords(const string &wordfile);
     static vector<Document> match(INode * node, string regex);
     static vector<Document> match(INode * node, vector<string> q_regex);

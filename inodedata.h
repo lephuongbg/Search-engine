@@ -4,12 +4,14 @@
 #include <vector>
 #include "document.h"
 
+class INode;
+
 class INodeData
 {
 private:
-    string word_;
     vector<Document> docs_;
     bool sorted_;
+    string word_;
 
 public:
     INodeData();
@@ -18,6 +20,9 @@ public:
     vector<Document> docs();
     void docs(Document doc);
     void sortDocs();
+
+//friend class INode;
+friend class Indexer; // For frequently calling private variables from Indexer
 };
 
 #endif // INODEDATA_H

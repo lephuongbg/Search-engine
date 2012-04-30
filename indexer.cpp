@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <cstring>
 
 // CONSTRUCTOR
 Indexer::Indexer()
@@ -19,32 +20,34 @@ Indexer::~Indexer()
 }
 
 // INSERT A KEYWORD INTO THE INDEXER
-void Indexer::insertKey(const string & keyword)
+void Indexer::insertKey(const string & keyword, Document & docname)
 {
-    indexer_ = insertKey(indexer_, keyword);
+    indexer_ = insertKey(indexer_, keyword, docname);
 }
 
-INode * Indexer::insertKey(INode * node, const string &keyword)
+INode * Indexer::insertKey(INode * node, const string &keyword, Document & docname)
 {
     //If the tree is empty, create a new node for it
     if (node == NULL)
     {
         INode * new_node = new INode(keyword);
+        new_node->data()->docs(docname);
         return new_node;
     }
     //If keyword is smaller than current node key, set it to the left
-    if (keyword < node->data()->word())
+    if (std::strcmp(keyword.c_str(), node->data()->word_.c_str()) < 0)
     {
-        node->setLeft(insertKey(node->left(), keyword));
+        node->setLeft(insertKey(node->left(), keyword, docname));
         return reBalance(node);
     }
     //If keyword is greater than current node key, set it to the right
-    else if (keyword > node->data()->word())
+    else if (std::strcmp(keyword.c_str(), node->data()->word_.c_str()) > 0)
     {
-        node->setRight(insertKey(node->right(), keyword));
+        node->setRight(insertKey(node->right(), keyword, docname));
         return reBalance(node);
     }
     //If keyword has already exist, return the node
+    node->data()->docs(docname);
     return node;
 }
 
@@ -166,7 +169,7 @@ void Indexer::setQuery(const string &query)
     
     for (i = 0; i < query_.size(); i++)
     {
-    	if (isIgnore(query_.at(i)))
+        if (!filter(query_.at(i)))
     	{
     		status_ = STOPWORD_WARNING;  // raise an warning
     		if (query_.size() == 1)
@@ -328,13 +331,9 @@ bool Indexer::addDocument(const string &docname)
             {
                 // Read each word one by one in the document
                 docfile >> keyword;
-                // Remove unnecessary character from keyword
-                filter(keyword);
-                // If keyword is insignificantly important, ignoreit
-                if (isIgnore(keyword))
-                    continue;
-                this->insertKey(keyword);
-                this->at(keyword)->data()->docs(doc);
+                // Filter the keyword and if it's still valid, we continue indexing
+                if (filter(keyword))
+                    this->insertKey(keyword, doc);
             }
             std::cout << "Indexed " + docname + ".\n";
         }
@@ -354,46 +353,34 @@ vector<Document> Indexer::operator[](const string &keyword)
 {
     vector<Document> result;
     INode * keynode = this->at(keyword);
-    // If the keyword doesn't exist, add it to the indexer
-    if (keynode == NULL)
-    {
-        this->insertKey(keyword);
-    }
-    // otherwise, return all documents containing it
-    else
+    // If the keyword exists, return all documents containing it
+    if (keynode != NULL)
     {
         result = keynode->data()->docs();
     }
 
+    // return empty result by default
     return result;
 }
 
-// IGNORE CERTAIN WORDS
-bool Indexer::isIgnore(const string &keyword)
-{
-    // If the keyword has zero-length size, ignore it
-    if (keyword.size() == 0)
-        return true;
-
-    // If the keyword exists in stop words list, also ignore it
-    if (stopwords_.find(keyword) != stopwords_.end())
-        return true;
-    return false;
-}
-
-// REMOVE UNNECESSARY CHARACTER FROM KEYWORD
+// REMOVE UNNECESSARY CHARACTER FROM THE KEYWORD AND CHECK ITS VALIDITY
 bool Indexer::isGarbage(char c)
 {
     return !( (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || (c >= 'A' && c <= '9') );
 }
 
-void Indexer::filter(string &keyword)
+bool Indexer::filter(string &keyword)
 {
     // Remove all characters defined in isGarbage method
     keyword.resize(std::remove_if(keyword.begin(), keyword.end(), isGarbage) - keyword.begin());
 
     // Transform all characters to lower case
     std::transform(keyword.begin(), keyword.end(), keyword.begin(), ::tolower);
+
+    if (keyword.size() == 0 || stopwords_.find(keyword) != stopwords_.end())
+        return false;
+
+    return true;
 }
 
 // RETRIEVE STOP WORDS FROM FILE
@@ -419,7 +406,7 @@ void Indexer::traverse(INode *node)
     if (node != NULL)
     {
         traverse(node->left());
-        std::cout << node->data()->word() << '\n';
+        std::cout << node->data()->word_ << '\n';
         traverse(node->right());
     }
 }
