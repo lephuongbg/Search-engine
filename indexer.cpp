@@ -169,22 +169,32 @@ void Indexer::setQuery(const string &query)
     
     for (i = 0; i < query_.size(); i++)
     {
+		cout << query_.at(i) << endl;
+    }
+    
+    cout << "a" << endl;
+    
+    for (i = 0; i < query_.size(); i = i + 2)
+    {
         if (!filter(query_.at(i)))
     	{
     		status_ = STOPWORD_WARNING;  // raise an warning
     		if (query_.size() == 1)
     		{
     			query_.erase(query_.begin());
+    			break;
     		}
     		else if (i == 0)
     		{
     			query_.erase(query_.begin());
     			query_.erase(query_.begin());
+    			i = i - 2;
     		}
     		else if (i == query_.size() - 1)
     		{
     			query_.pop_back();
     			query_.pop_back();
+    			break;
     		}
     		else
     		{
@@ -193,8 +203,16 @@ void Indexer::setQuery(const string &query)
     				query_.erase(query_.begin() + i - 1);
     			else
     				query_.erase(query_.begin() + i);
+    			i = i - 2;
     		}
     	}
+    }
+    
+    while (query_.size() > 0)
+    {
+    	temp = query_.back();
+		query_.pop_back();
+		cout << temp << endl;
     }
 }
 
