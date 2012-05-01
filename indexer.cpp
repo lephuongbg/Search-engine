@@ -167,7 +167,7 @@ void Indexer::setQuery(const string &query)
     	return;
     }
     
-    for (i = 0; i < query_.size(); i++)
+    for (i = 0; i < query_.size(); i = i + 2)
     {
         if (!filter(query_.at(i)))
     	{
@@ -175,16 +175,19 @@ void Indexer::setQuery(const string &query)
     		if (query_.size() == 1)
     		{
     			query_.erase(query_.begin());
+    			break;
     		}
     		else if (i == 0)
     		{
     			query_.erase(query_.begin());
     			query_.erase(query_.begin());
+    			i = i - 2;
     		}
     		else if (i == query_.size() - 1)
     		{
     			query_.pop_back();
     			query_.pop_back();
+    			break;
     		}
     		else
     		{
@@ -193,6 +196,7 @@ void Indexer::setQuery(const string &query)
     				query_.erase(query_.begin() + i - 1);
     			else
     				query_.erase(query_.begin() + i);
+    			i = i - 2;
     		}
     	}
     }
