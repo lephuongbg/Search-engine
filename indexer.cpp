@@ -169,6 +169,13 @@ void Indexer::setQuery(const string &query)
     
     for (i = 0; i < query_.size(); i = i + 2)
     {
+		cout << query_.at(i) << endl;
+    }
+    
+    cout << "a" << endl;
+    
+    for (i = 0; i < query_.size(); i = i + 2)
+    {
         if (!filter(query_.at(i)))
     	{
     		status_ = STOPWORD_WARNING;  // raise an warning
@@ -199,6 +206,13 @@ void Indexer::setQuery(const string &query)
     			i = i - 2;
     		}
     	}
+    }
+    
+    while (query_.size() > 0)
+    {
+    	temp = query_.back();
+		query_.pop_back();
+		cout << temp << endl;
     }
 }
 
