@@ -1,6 +1,6 @@
 QT += core gui
 TEMPLATE = app
-CONFIG += console
+QMAKE_CXXFLAGS = -std=c++0x
 
 SOURCES += main.cpp \
     document.cpp \
@@ -26,7 +26,8 @@ OTHER_FILES += \
     window-close.png \
     view-refresh.png \
     view-list-details-symbolic.png \
-    CMakeLists.txt
+    CMakeLists.txt \
+    search-text.png
 
 FORMS += \
     mainwindow.ui
