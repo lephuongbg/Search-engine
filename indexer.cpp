@@ -169,7 +169,7 @@ void Indexer::setQuery(const string &query)
     
     for (i = 0; i < query_.size(); i = i + 2)
     {
-        if (!filter(query_.at(i)))
+        if (!filter(query_.at(i), true))
     	{
     		status_ = STOPWORD_WARNING;  // raise an warning
     		if (query_.size() == 1)
@@ -252,7 +252,7 @@ void Indexer::execute()
 		    {
 		        // If the keyword is a wildcard
 		        if (buffer.find("*") != string::npos)
-		            // push the wildcard filter result into operand stack
+                    // push the wildcard filter result into operand stack
 		            s_operand.push(Indexer::match(indexer_, buffer));
 		        // otherwise,
 		        else
@@ -336,7 +336,7 @@ bool Indexer::addDocument(const string &docname)
                 // Read each word one by one in the document
                 docfile >> keyword;
                 // Filter the keyword and if it's still valid, we continue indexing
-                if (filter(keyword))
+                if (filter(keyword, false))
                     this->insertKey(keyword, doc);
             }
             std::cout << "Indexed " + docname + ".\n";
@@ -370,16 +370,21 @@ vector<Document> Indexer::operator[](const string &keyword)
 // REMOVE UNNECESSARY CHARACTER FROM THE KEYWORD AND CHECK ITS VALIDITY
 bool Indexer::isGarbage(char c)
 {
-    return !( (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || (c >= 'A' && c <= '9') );
+    return !( (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') );
 }
 
-bool Indexer::filter(string &keyword)
+bool Indexer::filter(string &keyword, bool isQuery)
 {
-    // Remove all characters defined in isGarbage method
-    keyword.resize(std::remove_if(keyword.begin(), keyword.end(), isGarbage) - keyword.begin());
-
-    // Transform all characters to lower case
-    std::transform(keyword.begin(), keyword.end(), keyword.begin(), ::tolower);
+    // Lower all characters and remove unnecessary one
+    for (string::iterator it = keyword.begin(); !keyword.empty() && it < keyword.end(); it++)
+    {
+        *it = tolower(*it);
+        if (isQuery)
+            if (*it == '*')
+                continue;
+        if (isGarbage(*it))
+            keyword.erase(it);
+    }
 
     if (keyword.size() == 0 || stopwords_.find(keyword) != stopwords_.end())
         return false;

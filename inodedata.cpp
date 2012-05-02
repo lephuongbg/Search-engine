@@ -37,7 +37,7 @@ vector<Document> INodeData::docs()
 void INodeData::docs(Document doc)
 {
     //Check for existance of the document in the list
-    for (vector<Document>::reverse_iterator rit = docs_.rbegin(); rit != docs_.rend(); rit++)
+    for (vector<Document>::reverse_iterator rit = docs_.rbegin(), ritend = docs_.rend(); rit != ritend; rit++)
     {
         //If yes,
         if (rit->name_ == doc.name_)

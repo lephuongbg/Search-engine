@@ -1,6 +1,7 @@
 #ifndef INDEXER_H
 #define INDEXER_H
 #include "inode.h"
+#include <unordered_set>
 #include <set>
 #include <stack>
 #include <vector>
@@ -20,7 +21,7 @@ public:
     void execute();
     bool addDocument(const string &docname);
     static bool isGarbage(char c);
-    bool filter(string &keyword);
+    bool filter(string &keyword, bool isQuery);
     void indexStopWords(const string &wordfile);
     static vector<Document> match(INode * node, string regex);
     static vector<Document> match(INode * node, vector<string> q_regex);
@@ -35,7 +36,7 @@ public:
 
 protected:
     INode * indexer_;
-    set<string> stopwords_;
+    unordered_set<string> stopwords_;
     vector<string> query_;
     vector<Document> result_;
     Status status_;
