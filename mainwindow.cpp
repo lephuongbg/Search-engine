@@ -122,7 +122,8 @@ void MainWindow::index(QStringList list)
             }
         }
     }
-    qDebug() << "Indexing time: " << timer.elapsed() / 1000.0 << "s";
+//    qDebug() << "Indexing time: " << timer.elapsed() / 1000.0 << "s";
+    ui->statusBar->showMessage(QString().sprintf("Indexing time: %fs", timer.elapsed() / 1000.0), 5000);
     progress.setValue(list.count());
     emit updatedList(fileList);
     updateWordList(this->indexer->indexer());
@@ -147,13 +148,13 @@ void MainWindow::updateStatusBar()
     switch (indexer->status())
     {
     case Indexer::SUCCESS:
-        statusBar()->showMessage("Query successful!");
+        statusBar()->showMessage("Query successful!", 5000);
         break;
     case Indexer::STOPWORD_WARNING:
-        statusBar()->showMessage("Query successful with stop words elimination!");
+        statusBar()->showMessage("Query successful with stop words elimination!", 5000);
         break;
     case Indexer::SYNTAX_ERROR:
-        statusBar()->showMessage("Syntax error!");
+        statusBar()->showMessage("Syntax error!", 5000);
         break;
     default:
         break;
