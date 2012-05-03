@@ -56,7 +56,7 @@ void Document::increaseOccurrence(int n)
  *****************************************************/
 bool Document::docNameComp(Document doc1, Document doc2)
 {
-    return (doc1.name().compare(doc2.name()) <= 0);
+    return (doc1.name_.compare(doc2.name_) <= 0);
 }
 
 bool Document::docFreqComp(Document doc1, Document doc2)

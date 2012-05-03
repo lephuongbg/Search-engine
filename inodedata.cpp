@@ -49,6 +49,7 @@ void INodeData::docs(Document doc)
     }
     //If the list doesn't have the document, add it to the list
     docs_.insert(docs_.end(), doc);
+    sorted_ = false;
 }
 
 /*******************************************
@@ -58,4 +59,5 @@ void INodeData::sortDocs()
 {
     if (!sorted_)
         sort(docs_.begin(), this->docs().end(), Document::docNameComp);
+    sorted_ = true;
 }
