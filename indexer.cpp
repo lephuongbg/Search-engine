@@ -462,12 +462,10 @@ vector<Document> Indexer::match(INode *node, vector<string> pattern)
 	vector<string> temp;
 	string word = node->data()->word(); // Cache out the INode word data value
     unsigned int i;
-    int pos;
-	string first, last;
+	string first(pattern.at(0)), last(pattern.at(pattern.size() - 1));  // Cache the first and last pattern
 	bool suitable = true; // A flag determine if the pattern match the word or not
-	first = pattern.at(0), last = pattern.at(pattern.size() - 1);  // Cache the first and last pattern
 	
-	if ((pos = word.find(first)) == string::npos || pos != 0)  // If the first pattern is not at the start of the word
+	if ((i = word.find(first)) == string::npos || i != 0)  // If the first pattern is not at the start of the word
 	{
 		suitable = false;  // turn the flag
 	}
@@ -476,27 +474,22 @@ vector<Document> Indexer::match(INode *node, vector<string> pattern)
 		word = word.substr(first.size());  // cut the first matching part out of the word
 	}
 	
-    if ((pos = word.rfind(last)) == string::npos || (unsigned) pos != word.size() - last.size())  // If the last pattern is not at the end of the word
+    if ((i = word.rfind(last)) == string::npos || i != word.size() - last.size())  // If the last pattern is not at the end of the word
 	{
 		suitable = false;  // turn the flag
 	}
 	else  // else, the last pattern match the word
 	{
-		word = word.substr(0, pos);  // cut the last matching part out of the word
+		word = word.substr(0, i);  // cut the last matching part out of the word
 	}
 	
 	// Else, we move on and test the pattern in the middle of the word	
-	for (i = 1; i < pattern.size() - 1; i++)
+	for (i = 1; i < pattern.size() - 1 && suitable; i++)
 	{
 		if ((pos = word.find(pattern.at(i))) != string::npos)  // If we find the pattern
-		{
 			word = word.substr(pos + 1);  // cut the matching part out of the word
-		}
 		else  // else,
-		{
 			suitable = false;  // turn the flag
-			break; // and break the testing loop
-		}
 	}
 	
 	if (suitable)  // If the word is suitable for the pattern
@@ -504,9 +497,15 @@ vector<Document> Indexer::match(INode *node, vector<string> pattern)
 		result = node->data()->docs();  // append the documents containing it into the result
 	}
 	
-	result = Document::disjunct(result, Indexer::match(node->left(), pattern));  // Do the whole process again with the left tree node and combine the 2 results
+	// Do the whole process again with the left tree node and combine the 2 results
+	temp = Indexer::match(node->left(), pattern);
+	if (! temp.empty())
+		result = Document::disjunct(result, temp);
 	
-	result = Document::disjunct(result, Indexer::match(node->right(), pattern));  // Do the whole process again with the right tree node and combine the 2 results
+	// Do the whole process again with the right tree node and combine the 2 results
+	temp = Indexer::match(node->right(), pattern);
+	if (! temp.empty())
+		result = Document::disjunct(result, temp); 
 	
     return result;
 }
