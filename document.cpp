@@ -5,7 +5,6 @@
  ************************************/
 Document::Document()
 {
-    name_ = "";
     occurrence_ = 1;
 }
 
@@ -70,32 +69,31 @@ bool Document::docFreqComp(Document doc1, Document doc2)
  *****************************************************************************/
 vector<Document> Document::conjunct(vector<Document> docs1, vector<Document> docs2)
 {
-    unsigned int i = 0, j = 0, o1, o2;
-    string name1, name2;
+    unsigned int o1, o2;
+    vector<Document>::iterator it1end = docs1.end(), it2end = docs2.end();
+    vector<Document>::iterator it1 = docs1.begin(), it2 = docs2.begin();
     Document temp;
     vector<Document> result;
     
-    while (i < docs1.size() && j < docs2.size()) 
+    while (it1 < it1end && it2 < it2end)
     {
-        name1 = docs1.at(i).name();
-        name2 = docs2.at(j).name();
-        if (name1 == name2)
+        if (it1->name_ == it2->name_)
         {
-            temp.name( name1 );
-            o1 = docs1.at(i).occurrence();
-            o2 = docs2.at(j).occurrence();
+            temp.name(it1->name_);
+            o1 = it1->occurrence_;
+            o2 = it2->occurrence_;
             temp.occurrence( (o1 < o2) ? o1 : o2 );
             result.push_back( temp );
-            i++;
-            j++;
+            it1++;
+            it2++;
         }
-        else if (name1 < name2)
+        else if (it1->name_ < it2->name_)
         {
-            i++;
+            it1++;
         }
         else
         {
-            j++;
+            it2++;
         }
     }
     
@@ -107,47 +105,46 @@ vector<Document> Document::conjunct(vector<Document> docs1, vector<Document> doc
  *****************************************************************************/
 vector<Document> Document::disjunct(vector<Document> docs1, vector<Document> docs2)
 {
-    unsigned int i = 0, j = 0, o1, o2;
-    string name1, name2;
+    unsigned int o1, o2;
+    vector<Document>::iterator it1end = docs1.end(), it2end = docs2.end();
+    vector<Document>::iterator it1 = docs1.begin(), it2 = docs2.begin();
     Document temp;
     vector<Document> result;
-    
-    while (i < docs1.size() && j < docs2.size()) 
+
+    while (it1 != it1end && it2 != it2end)
     {
-        name1 = docs1.at(i).name();
-        name2 = docs2.at(j).name();
-        if (name1 == name2)
+        if (it1->name_ == it2->name_)
         {
-            temp.name( name1 );
-            o1 = docs1.at(i).occurrence();
-            o2 = docs2.at(j).occurrence();
+            temp.name( it1->name_ );
+            o1 = it1->occurrence();
+            o2 = it2->occurrence();
             temp.occurrence( (o1 > o2) ? o1 : o2 );
             result.push_back( temp );
-            i++;
-            j++;
+            it1++;
+            it2++;
         }
-        else if (name1 < name2)
+        else if (it1->name_ < it2->name_)
         {
-            result.push_back( docs1.at(i) );
-            i++;
+            result.push_back( *it1 );
+            it1++;
         }
         else
         {
-            result.push_back( docs2.at(j) );
-            j++;
+            result.push_back( *it2 );
+            it2++;
         }
     }
     
-    while (i < docs1.size())
+    while (it1 != it1end)
     {
-        result.push_back( docs1.at(i) );
-        i++;
+        result.push_back( *it1 );
+        it1++;
     }
     
-    while (j < docs2.size())
+    while (it2 != it2end)
     {
-        result.push_back( docs2.at(j) );
-        j++;
+        result.push_back( *it2 );
+        it2++;
     }
     
     return result;
