@@ -56,10 +56,12 @@ int main(int argc, char *argv[])
     time_t start = clock();
     for (it = args.begin(); it != args.end(); it++)
     {
-        I.addDocument(*it);
+        if (I.addDocument(*it))
+            cout << "Indexed " << *it << "\n";
+        else
+            cout << "Ignored " << *it << "\n";
     }
     cout << "Complete in " << (float) (clock() - start)/CLOCKS_PER_SEC << " second(s).\n";
-//    Indexer::traverse(I.indexer());
     while (1)
     {
         cout << "Query: ";
@@ -68,10 +70,7 @@ int main(int argc, char *argv[])
         if (q == ".")
             break;
         I.setQuery(q);
-        CALLGRIND_START_INSTRUMENTATION;
         I.execute();
-        CALLGRIND_STOP_INSTRUMENTATION;
-        CALLGRIND_DUMP_STATS;
         vector<Document> result = I.result();
         for (vector<Document>::iterator it = result.begin(); it != result.end(); it++)
         {
