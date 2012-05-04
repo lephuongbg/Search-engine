@@ -344,11 +344,9 @@ bool Indexer::addDocument(const string &docname)
                 if (filter(keyword, false))
                     this->insertKey(keyword, doc);
             }
-            std::cout << "Indexed " + docname + ".\n";
         }
         else
         {
-            std::cout << "Ignored " + docname + ".\n";
             return false; // Indicate the file is not read
         }
     }
@@ -420,17 +418,6 @@ void Indexer::indexStopWords(const string &wordfile)
             file >> stopword;
             stopwords_.insert(stopword);
         }
-    }
-}
-
-// PRINT ALL KEYWORDS IN INDEXER
-void Indexer::traverse(INode *node)
-{
-    if (node != NULL)
-    {
-        traverse(node->left());
-        std::cout << node->data()->word_ << '\n';
-        traverse(node->right());
     }
 }
 

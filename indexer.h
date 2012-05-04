@@ -31,8 +31,6 @@ public:
     vector<Document> operator[](const string &keyword);
     INode * indexer();
     Status status();
-    // Debug methods
-    static void traverse(INode * node);
 
 protected:
     INode * indexer_;
