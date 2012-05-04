@@ -27,6 +27,11 @@ CLI Manual (can apply for GUI version):
 Running:
     search-engine [--option [<argument>]] <files_to_index>
 Provide all file names as commandline arguments for the program
+Eg: search-engine file1.txt file2.txt
+    search-engine documents/*     (for indexing every files inside 'documents' directory)
+    
+Stop the program:
+    Use "." (dot) as the query
 
 Program's option:
 --stop-words-file <path/to/file>
