@@ -508,6 +508,7 @@ vector<Document> Indexer::match(INode *node, vector<string> pattern)
 			return result;  // return
 	}
 	
+	node->data()->sortDocs();
 	result = Document::disjunct(result, node->data()->docs());  // append the documents containing it into the result
 	
     return result;
