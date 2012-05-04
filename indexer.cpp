@@ -365,6 +365,7 @@ vector<Document> Indexer::operator[](const string &keyword)
     // If the keyword exists, return all documents containing it
     if (keynode != NULL)
     {
+        keynode->data()->sortDocs();
         result = keynode->data()->docs();
     }
 

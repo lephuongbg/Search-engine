@@ -122,6 +122,8 @@ void showHelp()
          << "Running:\n"
          << "    search-engine [--option [<argument>]] <files_to_index>\n"
          << "Provide all file names as commandline arguments for the program\n\n"
+         << "Stop the program:\n"
+         << "    Use \".\" (dot) as the query\n\n"
          << "Program's option:\n"
          << "--stop-words-file <path/to/file>\n"
          << "    specify stop words list file. Default file: \"./stopwords\"\n"
