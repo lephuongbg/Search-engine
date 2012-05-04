@@ -381,14 +381,19 @@ bool Indexer::isGarbage(char c)
 bool Indexer::filter(string &keyword, bool isQuery)
 {
     // Lower all characters and remove unnecessary one
-    for (string::iterator it = keyword.begin(); !keyword.empty() && it < keyword.end(); it++)
+    string::iterator it = keyword.begin();
+    while (!keyword.empty() && it < keyword.end())
     {
         *it = tolower(*it);
         if (isQuery)
             if (*it == '*')
                 continue;
         if (isGarbage(*it))
+        {
             keyword.erase(it);
+            continue;
+        }
+        it++;
     }
 
     if (keyword.size() == 0 || stopwords_.find(keyword) != stopwords_.end())
