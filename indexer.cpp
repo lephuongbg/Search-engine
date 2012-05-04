@@ -387,7 +387,10 @@ bool Indexer::filter(string &keyword, bool isQuery)
         *it = tolower(*it);
         if (isQuery)
             if (*it == '*')
+            {
+                it++;
                 continue;
+            }
         if (isGarbage(*it))
         {
             keyword.erase(it);
