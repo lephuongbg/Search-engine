@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <valgrind/callgrind.h>
 #include "indexer.h"
 #include "time.h"
 
@@ -102,7 +103,10 @@ int main(int argc, char *argv[])
         if (q == ".")
             break;
         I.setQuery(q);
+        CALLGRIND_START_INSTRUMENTATION;
         I.execute();
+        CALLGRIND_STOP_INSTRUMENTATION;
+        CALLGRIND_DUMP_STATS;
         vector<Document> result = I.result();
         for (vector<Document>::iterator it = result.begin(); it != result.end(); it++)
         {

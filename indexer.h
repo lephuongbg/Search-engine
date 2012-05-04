@@ -17,7 +17,7 @@ public:
     void insertKey(const string & keyword, Document &docname);
     static INode * insertKey(INode * node, const string & keyword, Document &docname);
     static INode * reBalance(INode * node);
-    void setQuery(const string &query);
+    void setQuery(string &query);
     void execute();
     bool addDocument(const string &docname);
     static bool isGarbage(char c);

@@ -258,7 +258,8 @@ void MainWindow::on_filterButton_clicked()
     }
 
     // Add query to the indexer and excute it
-    indexer->setQuery(query.toStdString());
+    std::string q = query.toStdString();
+    indexer->setQuery(q);
     indexer->execute();
 
     // Display result
