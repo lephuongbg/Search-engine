@@ -58,6 +58,6 @@ void INodeData::docs(Document doc)
 void INodeData::sortDocs()
 {
     if (!sorted_)
-        sort(docs_.begin(), this->docs().end(), Document::docNameComp);
+        sort(docs_.begin(), docs_.end(), Document::docNameComp);
     sorted_ = true;
 }
