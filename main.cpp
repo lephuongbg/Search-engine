@@ -3,7 +3,6 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <valgrind/callgrind.h>
 #include "indexer.h"
 #include "time.h"
 
